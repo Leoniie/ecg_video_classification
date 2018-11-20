@@ -1,3 +1,3 @@
-from helpers.io import unzip
+from helpers.io import inputter_csv
 
-unzip('data/task4.zip', 'data')
+df_y = inputter_csv('..\\data\\train_target.csv')

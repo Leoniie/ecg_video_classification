@@ -1,9 +1,11 @@
 import pandas as pd
 import numpy as np
+import os
 
 
 def inputter_csv(file):
-    array = pd.read_csv( file )
+    path = os.path.abspath( file)
+    array = pd.read_csv( path )
     array = array[ 'y' ].values
     array = np.reshape( array, (array.shape[ 0 ], 1) )
 
