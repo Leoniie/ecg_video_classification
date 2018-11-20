@@ -23,3 +23,8 @@ def Outputter():
 
     # no return required
 
+def unzip(path_from, path_to):
+    import zipfile
+    zip_ref = zipfile.ZipFile( path_from, 'r' )
+    zip_ref.extractall( path_to )
+    zip_ref.close()
