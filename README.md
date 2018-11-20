@@ -10,3 +10,7 @@ train - a folder with 158 training videos with name id.avi
 test - a folder with 69 test videos with name id.avi
 train_target.csv - the labels of the training data set
 sample.csv - a sample submission file in the correct format
+
+## Help
+
+checkout the following link: https://gitlab.vis.ethz.ch/lucac/aml_task4
