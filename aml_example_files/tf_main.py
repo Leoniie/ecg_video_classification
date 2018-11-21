@@ -1,9 +1,9 @@
 import os
 import tensorflow as tf	
 import numpy as np
-from tf_utils import input_fn_from_dataset,input_fn_frame_from_dataset,save_tf_record,prob_positive_class_from_prediction
-from get_data import get_videos_from_folder,get_target_from_csv
-from utils import save_solution
+from aml_example_files.tf_utils import input_fn_from_dataset,input_fn_frame_from_dataset,save_tf_record,prob_positive_class_from_prediction
+from aml_example_files.get_data import get_videos_from_folder,get_target_from_csv
+from aml_example_files.utils import save_solution
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 train_folder = os.path.join(dir_path,"../train/")

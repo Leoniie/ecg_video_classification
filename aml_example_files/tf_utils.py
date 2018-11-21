@@ -1,5 +1,5 @@
 import tensorflow as tf
-from get_data import get_videos_from_folder,get_target_from_csv
+from aml_example_files.get_data import get_videos_from_folder,get_target_from_csv
 import sys
 import numpy as np
 
