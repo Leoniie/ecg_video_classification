@@ -4,7 +4,7 @@
 def scaling():
     pass
     # TODO: use scikit video or cv2 to rescale the image/video
-
+#leonie
 def cropping():
     pass
     # TODO: reduce the image to moving pixels
@@ -16,6 +16,7 @@ def normalize():
 
 def preprocessing():
     pass
+
     # TODO: add the relevant arguments to the function
     # TODO: add binary decision variables
     # TODO: add the substeps to the function
