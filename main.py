@@ -6,15 +6,11 @@ from helpers.output import output_generator
 
 
 
-<<<<<<< HEAD
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from keras.utils import to_categorical
-=======
-from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset, save_x
-from helpers.io import inputter_csv_file, inputter_videos_from_folder_array, outputter
 from helpers.preprocessing import preprocessing, preprocessing_scaled
->>>>>>> master
+
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -39,47 +35,19 @@ os.makedirs(tf_record_dir, exist_ok=True)
 tf_record_train = os.path.join(tf_record_dir, 'train' + '.tfrecords')
 tf_record_test = os.path.join(tf_record_dir, 'test' + '.tfrecords')
 
-
-
-<<<<<<< HEAD
-
-=======
 x_train = inputter_videos_from_folder_array(train_folder)
 y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 
 
 x_test = inputter_videos_from_folder_array(test_folder)
 
-# Model
-#y_train = df_y_cat=to_categorical(y_train)
-
 y = evaluate_sequential(preprocessing(x_train),
                         y_train)
 output_generator(y, preprocessing(x_test))
 
-
-# print(x_train[2].shape)
-#
-# print (x_train[2][0,:,:])
-# # Model
-#
-# a = np.zeros((50,50))
-#
-# image = x_train[2][0,:,:]
-#
-# for i in np.arange(50):
-#     for j in np.arange(50):
-#         a[i,j]= np.sum(image[2*i:2*i+2,2*j:2*j+2])/4
-
-
-
-
-
-#
 # plt.figure()
 # plt.imshow(a)
 # plt.savefig("small2.png")
 
 #x_train_full = preprocessing(x_train)
 #x_train_scaled = preprocessing_scaled(x_train)
->>>>>>> master
