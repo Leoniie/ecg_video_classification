@@ -1,5 +1,6 @@
 import os
 import tensorflow as tf
+
 from models.Sequential import evaluate_sequential
 
 #from helpers.output import output_generator
