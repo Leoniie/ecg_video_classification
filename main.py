@@ -3,6 +3,7 @@ import tensorflow as tf
 
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset, save_x
 from helpers.io import inputter_csv_file, inputter_videos_from_folder_array, outputter
+from helpers.preprocessing import preprocessing, preprocessing_scaled
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -35,26 +36,27 @@ x_test = inputter_videos_from_folder_array(test_folder)
 
 
 
-print(x_train[2].shape)
-
-print (x_train[2][0,:,:])
-# Model
-
-a = np.zeros((50,50))
-
-image = x_train[2][0,:,:]
-
-for i in np.arange(50):
-    for j in np.arange(50):
-        a[i,j]= np.sum(image[2*i:2*i+2,2*j:2*j+2])/4
-
-
+# print(x_train[2].shape)
+#
+# print (x_train[2][0,:,:])
+# # Model
+#
+# a = np.zeros((50,50))
+#
+# image = x_train[2][0,:,:]
+#
+# for i in np.arange(50):
+#     for j in np.arange(50):
+#         a[i,j]= np.sum(image[2*i:2*i+2,2*j:2*j+2])/4
 
 
 
 
-plt.figure()
-plt.imshow(a)
-plt.savefig("small2.png")
 
+#
+# plt.figure()
+# plt.imshow(a)
+# plt.savefig("small2.png")
 
+x_train_full = preprocessing(x_train)
+x_train_scaled = preprocessing_scaled(x_train)
