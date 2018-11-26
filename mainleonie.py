@@ -1,5 +1,9 @@
 import os
 import tensorflow as tf
+from keras.models import Sequential
+from keras.layers import Dense, Activation, Conv2D, MaxPooling2D, LSTM
+
+
 
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset, save_x
 from helpers.io import inputter_csv_file, inputter_videos_from_folder_array, outputter
@@ -16,8 +20,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 
-train_folder = os.path.join(dir_path,"data\\train")
-test_folder = os.path.join(dir_path,"data\\test")
+train_folder = os.path.join(dir_path,"data/train/")
+test_folder = os.path.join(dir_path,"data/test/")
 
 
 # Create tf records in super folder for train records outside git-repository
@@ -49,7 +53,12 @@ x_train_scaled = preprocessing_scaled(x_train)
 7
 8
 model = Sequential()
-# define CNN model
+
+
+model = Sequential()
+model.add(TimeDistributed(Conv2D(1, (2,2), activation='relu', padding='same', input_shape=(100,100,1))))
+model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
+model.add(Flatten())
 model.add(TimeDistributed(Conv2D(...))
 model.add(TimeDistributed(MaxPooling2D(...)))
 model.add(TimeDistributed(Flatten()))
