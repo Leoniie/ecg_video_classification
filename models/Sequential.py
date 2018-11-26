@@ -50,14 +50,14 @@ def evaluate_sequential(X, y):
     earlystop = keras.callbacks.EarlyStopping(monitor='val_f1', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
-    model.fit([X, fft, bpm], y,
-              epochs=epochs, batch_size=50, validation_split=0.2, shuffle=True, callbacks=[earlystop],
-              class_weight=class_weights)  # , class_weight=class_weights
+    model.fit(X, y,
+              epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True, callbacks=[earlystop],
+              )  # , class_weight=class_weights
     time_after = datetime.now()
 
     print("fitting took {} seconds".format(time_after - time_before))
     y_pred = np.argmax(
-        model.predict([preprocessing(df_test, resolution=0.75, resolution_type='resize'), fft_test, bpm_test]),
+        model.predict([preprocessing(x_test)),
         axis=1)
     y_true = np.argmax(y, axis=1)
     try:
@@ -66,7 +66,7 @@ def evaluate_sequential(X, y):
         pass
 
     y_test = np.argmax(
-        model.predict([preprocessing(df_test, resolution=0.75, resolution_type='resize'), fft_test, bpm_test]),
+        model.predict([preprocessing(x_test)),
         axis=1)
 
     return y_test
