@@ -8,10 +8,10 @@ from keras.layers import TimeDistributed
 from keras.losses import binary_crossentropy
 
 
-def build_sequential(nb_steps=200, nb_width=100, nb_height=100):
+def build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels):
     model = Sequential()
     # define CNN model
-    model.add(TimeDistributed(Conv2D(16, x_size,activation='relu', padding = 'same',input_shape=(nb_steps, nb_width, nb_height) ))
+    model.add(TimeDistributed(Conv2D(nb_channels, x_size,activation='relu', padding = 'same',input_shape=(nb_steps, nb_width, nb_height) ))
     model.add(TimeDistributed(MaxPooling2D(2,2)))
     model.add(TimeDistributed(Flatten()))
     # define LSTM model
@@ -27,9 +27,9 @@ def build_sequential(nb_steps=200, nb_width=100, nb_height=100):
 def evaluate_sequential(X, y):
     # Hyperparameter!
     # hidden_layers=0  #not more than 2
-
+    nb_channels=16
     patience = 20
-
+    batch_size=1
     epochs = 150
 
     # X = np.atleast_2d(X)
@@ -39,9 +39,7 @@ def evaluate_sequential(X, y):
     nb_samples, nb_steps, nb_width, nb_height = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_series))
 
-    model = make_functional_LSTM(filter_length=filter_length,
-                                 nb_input_series=nb_series, nb_input_channels=1,
-                                 nb_filter=nb_filter)  # , Neurons = Neurons
+    model = build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels)  # , Neurons = Neurons
     print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape,
                                                                                             model.output_shape,
                                                                                             nb_filter, filter_length))
