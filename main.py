@@ -54,8 +54,8 @@ x_test = inputter_videos_from_folder_array(test_folder)
 #y_train = df_y_cat=to_categorical(y_train)
 
 y = evaluate_sequential(preprocessing(x_train),
-                        y_train)
-output_generator(y, preprocessing(x_test))
+                        to_categorical(y_train))
+outputter(y)
 
 
 # print(x_train[2].shape)
