@@ -48,9 +48,9 @@ x_test = inputter_videos_from_folder_array(test_folder)
 # Model
 #y_train = df_y_cat=to_categorical(y_train)
 
-y = evaluate_functional_net(...(df_X, resolution = 1, resolution_type='resize'),
+y = evaluate_functional_net(preprocessing(x_train),
                         y_train)
-output_generator(y, df_test)
+output_generator(y, preprocessing(x_test))
 
 
 # print(x_train[2].shape)
