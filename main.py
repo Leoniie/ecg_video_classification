@@ -37,12 +37,7 @@ tf_record_test = os.path.join(tf_record_dir, 'test' + '.tfrecords')
 
 
 <<<<<<< HEAD
-# Model
-#y_train = df_y_cat=to_categorical(y_train)
 
-y = evaluate_functional_net(...(df_X, resolution = 1, resolution_type='resize'),
-                        y_train)
-output_generator(y, df_test)
 =======
 x_train = inputter_videos_from_folder_array(train_folder)
 y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
@@ -50,7 +45,12 @@ y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 
 x_test = inputter_videos_from_folder_array(test_folder)
 
+# Model
+#y_train = df_y_cat=to_categorical(y_train)
 
+y = evaluate_functional_net(...(df_X, resolution = 1, resolution_type='resize'),
+                        y_train)
+output_generator(y, df_test)
 
 
 # print(x_train[2].shape)
