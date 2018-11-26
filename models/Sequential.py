@@ -23,7 +23,7 @@ def build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels):
     model.compile(optimizer='adamax',
               loss='binary_crossentropy',
               metrics=['accuracy',final_metric])
-    # TODO: build function
+
     return model
 
 
