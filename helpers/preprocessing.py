@@ -34,6 +34,8 @@ def preprocessing(x):
         v = v/d
         x_array[i,:v.shape[0],:v.shape[1],:v.shape[2]]= v
 
+    return x_array
+
 
 
 def preprocessing_scaled(x):
@@ -65,6 +67,8 @@ def preprocessing_scaled(x):
         np.swapaxes(v,1,2)
         np.swapaxes(v,0,1)
         x_array[i,:v_scaled.shape[0],:v_scaled.shape[1],:v_scaled.shape[2]]= v_scaled
+
+        return x_array
 
 
 
