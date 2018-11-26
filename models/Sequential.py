@@ -6,6 +6,9 @@ from keras.layers import Dense
 from keras.layers import Flatten
 from keras.layers import TimeDistributed
 from keras.losses import binary_crossentropy
+from helpers.metrics import final_metric
+from helpers.preprocessing import preprocessing_scaled
+from helpers.preprocessing import preprocessing
 
 
 def build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels):
@@ -19,7 +22,7 @@ def build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels):
     model.add(Dense(2,activation='softmax'))
     model.compile(optimizer='adamax',
               loss='binary_crossentropy',
-              metrics=['accuracy'])
+              metrics=['accuracy',final_metric])
     # TODO: build function
     return model
 
@@ -41,8 +44,7 @@ def evaluate_sequential(X, y):
 
     model = build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels)  # , Neurons = Neurons
     print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape,
-                                                                                            model.output_shape,
-                                                                                            nb_filter, filter_length))
+                                                                                            model.output_shape))                                                                                     ))
     model.summary()
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
