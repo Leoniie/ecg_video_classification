@@ -6,15 +6,15 @@ from helpers.output import output_generator
 
 
 
-<<<<<<< HEAD
+###<<<<<<< HEAD
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from keras.utils import to_categorical
-=======
+##=======
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset, save_x
 from helpers.io import inputter_csv_file, inputter_videos_from_folder_array, outputter
 from helpers.preprocessing import preprocessing, preprocessing_scaled
->>>>>>> master
+##>>>>>>> master
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,9 +41,9 @@ tf_record_test = os.path.join(tf_record_dir, 'test' + '.tfrecords')
 
 
 
-<<<<<<< HEAD
+##<<<<<<< HEAD
 
-=======
+##=======
 x_train = inputter_videos_from_folder_array(train_folder)
 y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 
@@ -82,4 +82,4 @@ outputter(y)
 
 #x_train_full = preprocessing(x_train)
 #x_train_scaled = preprocessing_scaled(x_train)
->>>>>>> master
+###>>>>>>> master
