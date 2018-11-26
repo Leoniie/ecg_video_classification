@@ -1,5 +1,10 @@
 import os
 import tensorflow as tf
+from models.Sequential import evaluate_sequential
+
+from helpers.output import output_generator
+
+
 
 <<<<<<< HEAD
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
@@ -48,7 +53,7 @@ x_test = inputter_videos_from_folder_array(test_folder)
 # Model
 #y_train = df_y_cat=to_categorical(y_train)
 
-y = evaluate_functional_net(preprocessing(x_train),
+y = evaluate_sequential(preprocessing(x_train),
                         y_train)
 output_generator(y, preprocessing(x_test))
 
@@ -75,6 +80,6 @@ output_generator(y, preprocessing(x_test))
 # plt.imshow(a)
 # plt.savefig("small2.png")
 
-x_train_full = preprocessing(x_train)
-x_train_scaled = preprocessing_scaled(x_train)
+#x_train_full = preprocessing(x_train)
+#x_train_scaled = preprocessing_scaled(x_train)
 >>>>>>> master
