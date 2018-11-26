@@ -46,12 +46,6 @@ x_train_full = preprocessing(x_train)
 x_train_scaled = preprocessing_scaled(x_train)
 
 
-3
-4
-5
-6
-7
-8
 model = Sequential()
 
 
