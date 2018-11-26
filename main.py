@@ -16,8 +16,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 
-train_folder = os.path.join(dir_path,"data\\train")
-test_folder = os.path.join(dir_path,"data\\test")
+train_folder = os.path.join(dir_path,"data/train/")
+test_folder = os.path.join(dir_path,"data/test/")
 
 
 # Create tf records in super folder for train records outside git-repository
