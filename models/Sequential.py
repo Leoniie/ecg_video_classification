@@ -1,5 +1,7 @@
 # TODO: Create a simple sequential Conv2DLSTM NN
 #Malte
+from __future__ import print_function, division
+from datetime import datetime
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
@@ -9,16 +11,18 @@ from keras.losses import binary_crossentropy
 from helpers.metrics import final_metric
 from helpers.preprocessing import preprocessing_scaled
 from helpers.preprocessing import preprocessing
+from keras.layers import TimeDistributed
+from keras.layers.convolutional import MaxPooling2D
+from keras.layers.convolutional import Conv2D
 
-
-def build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels):
+def build_sequential(nb_steps, nb_width, nb_height, nb_channels):
     model = Sequential()
     # define CNN model
-    model.add(TimeDistributed(Conv2D(nb_channels, x_size,activation='relu', padding = 'same',input_shape=(nb_steps, nb_width, nb_height) ))
+    model.add(TimeDistributed(Conv2D(nb_channels, x_size,activation='relu', padding = 'same',input_shape=(nb_steps, nb_width, nb_height) )))
     model.add(TimeDistributed(MaxPooling2D(2,2)))
     model.add(TimeDistributed(Flatten()))
     # define LSTM model
-    model.add(LSTM(...))
+    model.add(LSTM(50, activation='relu'))
     model.add(Dense(2,activation='softmax'))
     model.compile(optimizer='adamax',
               loss='binary_crossentropy',
@@ -31,7 +35,7 @@ def evaluate_sequential(X, y):
     # Hyperparameter!
     # hidden_layers=0  #not more than 2
     nb_channels=16
-    patience = 20
+    patience = 3
     batch_size=1
     epochs = 150
 
@@ -42,14 +46,13 @@ def evaluate_sequential(X, y):
     nb_samples, nb_steps, nb_width, nb_height = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_series))
 
-    model = build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels)  # , Neurons = Neurons
-    print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape,
-                                                                                            model.output_shape))                                                                                     ))
-    model.summary()
+    model = build_sequential(nb_steps, nb_width, nb_height, nb_channels)  # , Neurons = Neurons
+    print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
+
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
-    earlystop = keras.callbacks.EarlyStopping(monitor='val_f1', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = keras.callbacks.EarlyStopping(monitor='val_final_metric', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
@@ -59,7 +62,7 @@ def evaluate_sequential(X, y):
 
     print("fitting took {} seconds".format(time_after - time_before))
     y_pred = np.argmax(
-        model.predict([preprocessing(x_test)),
+        model.predict(preprocessing(x_test)),
         axis=1)
     y_true = np.argmax(y, axis=1)
     try:
@@ -68,7 +71,7 @@ def evaluate_sequential(X, y):
         pass
 
     y_test = np.argmax(
-        model.predict([preprocessing(x_test)),
+        model.predict(preprocessing(x_test)),
         axis=1)
 
     return y_test
