@@ -1,9 +1,15 @@
 import os
 import tensorflow as tf
 
+<<<<<<< HEAD
+from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
+from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
+from keras.utils import to_categorical
+=======
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset, save_x
 from helpers.io import inputter_csv_file, inputter_videos_from_folder_array, outputter
 from helpers.preprocessing import preprocessing, preprocessing_scaled
+>>>>>>> master
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,13 +36,21 @@ tf_record_test = os.path.join(tf_record_dir, 'test' + '.tfrecords')
 
 
 
+<<<<<<< HEAD
+
+=======
 x_train = inputter_videos_from_folder_array(train_folder)
 y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 
 
 x_test = inputter_videos_from_folder_array(test_folder)
 
+# Model
+#y_train = df_y_cat=to_categorical(y_train)
 
+y = evaluate_functional_net(preprocessing(x_train),
+                        y_train)
+output_generator(y, preprocessing(x_test))
 
 
 # print(x_train[2].shape)
@@ -63,3 +77,4 @@ x_test = inputter_videos_from_folder_array(test_folder)
 
 x_train_full = preprocessing(x_train)
 x_train_scaled = preprocessing_scaled(x_train)
+>>>>>>> master
