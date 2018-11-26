@@ -3,6 +3,7 @@ import tensorflow as tf
 
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
+from keras.utils import to_categorical
 
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -32,3 +33,8 @@ if not os.path.exists(tf_record_test):
 	save_tf_record(x_test,tf_record_test)
 
 # Model
+#y_train = df_y_cat=to_categorical(y_train)
+
+y = evaluate_functional_net(preprocessing(df_X, resolution = 1, resolution_type='resize'),
+                        y_train)
+output_generator(y, df_test)
