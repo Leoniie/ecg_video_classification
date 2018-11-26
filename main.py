@@ -51,7 +51,7 @@ y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 x_test = inputter_videos_from_folder_array(test_folder)
 
 # Model
-#y_train = df_y_cat=to_categorical(y_train)
+#y_train = to_categorical(y_train)
 
 y = evaluate_sequential(preprocessing(x_train),
                         y_train)
