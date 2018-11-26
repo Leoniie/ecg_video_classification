@@ -18,6 +18,7 @@ def normalize():
 
 def preprocessing(x):
     #input: list of 3d arrays with shape (timesteps, height, width)
+    #also includes normalization
     max_time = 0
 
     for i in np.arange(x.shape[0]):
@@ -27,13 +28,17 @@ def preprocessing(x):
 
     for i in np.arange(x.shape[0]):
         v = x[i]
+        d = np.max(abs(v))
         np.swapaxes(v,1,2)
         np.swapaxes(v,0,1)
+        v = v/d
         x_array[i,:v.shape[0],:v.shape[1],:v.shape[2]]= v
 
 
 
 def preprocessing_scaled(x):
+    #input: list of 3d arrays with shape (timesteps, height, width)
+    #also includes normalization
     max_time = 0
     for i in np.arange(x.shape[0]):
         max_time = np.max((max_time, (x[i]).shape[0]))
@@ -52,6 +57,8 @@ def preprocessing_scaled(x):
                 for k in np.arange(50):
                     a[l,k]= np.sum(image[2*l:2*l+2, 2*k:2*k+2])
             v_scaled[j,:,:] = a
+        d = np.max(abs(v_scaled))
+        v_scaled = v_scaled/d
         x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]
 
 

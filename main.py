@@ -27,8 +27,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 
-train_folder = os.path.join(dir_path,"data\\train")
-test_folder = os.path.join(dir_path,"data\\test")
+train_folder = os.path.join(dir_path,"data/train/")
+test_folder = os.path.join(dir_path,"data/test/")
 
 
 # Create tf records in super folder for train records outside git-repository
@@ -54,8 +54,8 @@ x_test = inputter_videos_from_folder_array(test_folder)
 #y_train = to_categorical(y_train)
 
 y = evaluate_sequential(preprocessing(x_train),
-                        y_train)
-output_generator(y, preprocessing(x_test))
+                        to_categorical(y_train))
+outputter(y)
 
 
 # print(x_train[2].shape)
