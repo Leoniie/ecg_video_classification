@@ -5,7 +5,7 @@
 def build_sequential():
     model = Sequential()
     # define CNN model
-    model.add(TimeDistributed(Conv2D(...))
+    model.add(TimeDistributed(Conv2D(16, (100,100), activation='relu', padding = 'same',input_shape=(100,100, ) ))
     model.add(TimeDistributed(MaxPooling2D(...)))
     model.add(TimeDistributed(Flatten()))
     # define LSTM model
