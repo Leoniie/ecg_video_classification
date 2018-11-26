@@ -18,7 +18,7 @@ def build_sequential(nb_steps=200, nb_width=100, nb_height=100, nb_channels):
     model.add(TimeDistributed(MaxPooling2D(2,2)))
     model.add(TimeDistributed(Flatten()))
     # define LSTM model
-    model.add(LSTM(...))
+    model.add(LSTM(50, activation='relu'))
     model.add(Dense(2,activation='softmax'))
     model.compile(optimizer='adamax',
               loss='binary_crossentropy',
@@ -31,7 +31,7 @@ def evaluate_sequential(X, y):
     # Hyperparameter!
     # hidden_layers=0  #not more than 2
     nb_channels=16
-    patience = 20
+    patience = 3
     batch_size=1
     epochs = 150
 
@@ -49,7 +49,7 @@ def evaluate_sequential(X, y):
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
-    earlystop = keras.callbacks.EarlyStopping(monitor='val_f1', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = keras.callbacks.EarlyStopping(monitor='val_final_metric', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
