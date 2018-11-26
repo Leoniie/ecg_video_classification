@@ -2,6 +2,7 @@ import tensorflow as tf
 from aml_example_files.get_data import get_videos_from_folder,get_target_from_csv
 import sys
 import numpy as np
+import csv as csv
 
 def _int64_feature(value):
 	return tf.train.Feature(int64_list=tf.train.Int64List(value=[value]))
@@ -33,6 +34,11 @@ def save_tf_record(x,file_name,y = None):
 
 	writer.close()
 	sys.stdout.flush()
+
+
+def save_x(x,file_name):
+	np.savetxt(file_name,x,delimiter= ",")
+
 
 def prob_positive_class_from_prediction(pred):
 	return np.array([p['probabilities'][1] for p in pred])
