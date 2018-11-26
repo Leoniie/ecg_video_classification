@@ -1,19 +1,23 @@
 import numpy as np
 #
-# TODO: Create preprocessing pipeline with plugable substeps
+
 # possible library to use 'skvideo.utils'
 
 def scaling():
     pass
     # TODO: use scikit video or cv2 to rescale the image/video
+# scaling is already done in function preprocessing
+
 #leonie
 def cropping():
     pass
     # TODO: reduce the image to moving pixels
+#in the first basic model we don't crop, since most of the pixels that don't move are zero anyway
 
 def normalize():
     pass
-    # TODO: add normalizer
+    #done in preprocessing anyway
+
     # possibility to reduce values from 0 to 255
 
 def preprocessing(x):
@@ -78,9 +82,10 @@ def preprocessing_scaled(x):
 
 
 
-    # TODO: add the relevant arguments to the function
+    #add the relevant arguments to the function
     # TODO: add binary decision variables
     # TODO: add the substeps to the function
     # TODO: return the preprocessed data set
     # TODO: add Exceptions
+
     # be aware, no hard coding to be adaptable for train and test data
