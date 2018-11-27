@@ -67,7 +67,7 @@ def preprocessing_scaled(x):
             v_scaled[j,:,:] = a
         d = np.max(abs(v_scaled))
         v_scaled = v_scaled/d
-        x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]
+        x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]= v_scaled
 
 
         np.swapaxes(v,1,2)
