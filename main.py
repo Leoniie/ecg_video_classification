@@ -53,7 +53,6 @@ y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 
 x_test = inputter_videos_from_folder(test_folder)
 
-
 # Model
 #y_train = to_categorical(y_train)
 
