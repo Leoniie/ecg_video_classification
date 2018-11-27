@@ -4,34 +4,31 @@ from keras.layers import Dense, Dropout, Activation, LSTM
 from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape
 from keras.models import Sequential
 from keras.layers.wrappers import TimeDistributed
+from keras.callbacks import EarlyStopping
+from datetime import datetime
 from keras.layers.pooling import GlobalAveragePooling1D
 from keras.optimizers import SGD
 from keras.utils import np_utils
 from keras.models import Model
-from helpers.metrics import final_metric
+from helpers.metrics import final_metric, confusion_metric_vis
 
 def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels, kernel_size):
     # define CNN model
     model = Sequential()
-    model.add(TimeDistributed(Conv2D(nb_channels, kernel_size,border_mode='same'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(TimeDistributed(Activation('relu')))
-    model.add(TimeDistributed(Conv2D(32, 3, 3)))
-    model.add(TimeDistributed(Activation('relu')))
+    model.add(TimeDistributed(Conv2D(nb_channels, kernel_size, activation='relu'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
-    model.add(TimeDistributed(Dropout(0.25)))
+    model.add(TimeDistributed(Conv2D(64, (4, 4), activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+    model.add(TimeDistributed(Dropout(0.5)))
 
     model.add(TimeDistributed(Flatten()))
-    model.add(TimeDistributed(Dense(512)))
 
-    model.add(TimeDistributed(Dense(35, name="first_dense")))
-
-    model.add(LSTM(20, return_sequences=True, name="lstm_layer"));
-
-    # %%
-    model.add(Dense(2,activation='softmax'))
-    model.compile(optimizer='adamax',
-              loss='binary_crossentropy',
-              metrics=['accuracy',final_metric])
+    model.add(LSTM(20, return_sequences=False, name="lstm_layer"))
+    #More Dense??
+    model.add(Dense(2,activation='softmax',name="second_dense"))
+    model.compile(optimizer='adam',
+              loss='categorical_crossentropy',
+              metrics=['accuracy']) #,final_metric
 
     return model
 
@@ -42,8 +39,8 @@ def evaluate_sequential(X, y):
     nb_channels=16
     patience = 3
     batch_size=1
-    epochs = 150
-    kernel_size = (3,3)
+    epochs = 20
+    kernel_size = 2
 
     # X = np.atleast_2d(X)
     # if X.shape[0] == 1:
@@ -58,7 +55,7 @@ def evaluate_sequential(X, y):
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
-    earlystop = EarlyStopping(monitor='val_final_metric', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_accuracy', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
