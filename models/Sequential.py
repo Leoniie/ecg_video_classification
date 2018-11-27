@@ -26,7 +26,7 @@ from keras.layers import Dense
 def build_sequential(X, nb_steps, nb_width, nb_height, nb_channels):
     # define CNN model
     cnn = Sequential()
-    cnn.add(Conv2D(nb_channels,activation='relu', padding = 'same',data_format="channels_first", input_shape=X_train.shape[1:]))
+    cnn.add(Conv2D(nb_channels,activation='relu', padding = 'same',data_format="channels_last", input_shape=X.shape[1:]))
     cnn.add(MaxPooling2D(pool_size=(2,2)))
     cnn.add(Flatten())
     model = Sequential()
