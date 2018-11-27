@@ -23,20 +23,24 @@ from keras.layers import LSTM
 
 from keras.layers import Dense
 
-def build_sequential(X, nb_steps, nb_width, nb_height, nb_channels):
+def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels, kernel_size):
     # define CNN model
-    cnn = Sequential()
-    cnn.add(Conv2D(nb_channels,activation='relu', padding = 'same',data_format="channels_last", input_shape=X.shape[1:]))
-    cnn.add(MaxPooling2D(pool_size=(2,2)))
-    cnn.add(Flatten())
     model = Sequential()
+    model.add(TimeDistributed(Conv2D(nb_channels, kernel_size,border_mode='same'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
+    model.add(TimeDistributed(Activation('relu')))
+    model.add(TimeDistributed(Convolution2D(32, 3, 3)))
+    model.add(TimeDistributed(Activation('relu')))
+    model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
+    model.add(TimeDistributed(Dropout(0.25)))
 
-    #TODO: what is x_size?
+    model.add(TimeDistributed(Flatten()))
+    model.add(TimeDistributed(Dense(512)))
 
+    model.add(TimeDistributed(Dense(35, name="first_dense")))
 
-    # define LSTM model
-    model.add(TimeDistributed(cnn))
-    model.add(LSTM(50, activation='relu'))
+    model.add(LSTM(20, return_sequences=True, name="lstm_layer"));
+
+    # %%
     model.add(Dense(2,activation='softmax'))
     model.compile(optimizer='adamax',
               loss='binary_crossentropy',
@@ -52,15 +56,16 @@ def evaluate_sequential(X, y):
     patience = 3
     batch_size=1
     epochs = 150
+    kernel_size = (3,3)
 
     # X = np.atleast_2d(X)
     # if X.shape[0] == 1:
     #    X = X.T
 
-    nb_samples, nb_steps, nb_width, nb_height = X.shape
+    nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 
-    model = build_sequential(nb_steps, nb_width, nb_height, nb_channels)  # , Neurons = Neurons
+    model = build_sequential(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height, nb_channels=nb_channels, input_channels=input_channels)  # , Neurons = Neurons
     #print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
 
 
