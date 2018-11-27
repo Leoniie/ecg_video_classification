@@ -26,14 +26,17 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model.add(TimeDistributed(Dropout(0.2)))
     model.add(TimeDistributed(Conv2D(32, (3, 3), activation='relu', padding='same')))
     model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-    #model.add(TimeDistributed(Conv2D(32, (5, 5), activation='relu')))
+    model.add(TimeDistributed(Conv2D(64, (5, 5), activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
     model.add(TimeDistributed(Flatten()))
     model.add(TimeDistributed(Dropout(0.5)))
     model.add(TimeDistributed(Dense(200)))
     model.add(LSTM(256, return_sequences=False, name="lstm_layer", dropout=0.2))
     model.add(Dense(256, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
-    model.add(Dense(2, activation='softmax', name="second_dense"))
+    model.add(Dense(128, activation="relu", name="second_dense"))
+    model.add(Dropout(0.4))
+    model.add(Dense(2, activation='softmax', name="last_dense"))
     model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['categorical_accuracy']) #,final_metric

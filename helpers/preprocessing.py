@@ -35,7 +35,7 @@ def cropping():
 
 def normalize(df):
     df_max_frame = np.max(abs(df), 0)
-    df = df / df_max_frame
+    df = df / df_max_frame ###Hier hat der ein problem: invalid value encountered
     return df
 
 
