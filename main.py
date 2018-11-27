@@ -60,7 +60,7 @@ max_time_steps = np.max((max_time(x_train),max_time(x_test)))
 
 
 y = evaluate_sequential(preprocessing(x_train,max_time_steps),
-                        to_categorical(y_train,max_time_steps), preprocessing(x_test))
+                        to_categorical(y_train), preprocessing(x_test,max_time_steps))
 outputter(y)
 
 # plt.figure()
