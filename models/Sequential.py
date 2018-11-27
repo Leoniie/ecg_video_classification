@@ -17,26 +17,26 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model = Sequential()
     model.add(TimeDistributed(Conv2D(nb_channels, kernel_size, activation='relu'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
-    model.add(TimeDistributed(Conv2D(64, (4, 4), activation='relu')))
+    model.add(TimeDistributed(Conv2D(7, (5, 5), activation='relu')))
     model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
     model.add(TimeDistributed(Dropout(0.5)))
 
     model.add(TimeDistributed(Flatten()))
 
     model.add(LSTM(20, return_sequences=False, name="lstm_layer"))
-    #More Dense??
+    model.add(dense(10, activation='relu',name='first_dense'))
     model.add(Dense(2,activation='softmax',name="second_dense"))
     model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['accuracy']) #,final_metric
+              loss='sparse_binary_crossentropy',
+              metrics=['accuracy', final_metric]) #,final_metric
 
     return model
 
 
 def evaluate_sequential(X, y):
     # Hyperparameter!
-    # hidden_layers=0  #not more than 2
-    nb_channels=16
+
+    nb_channels=3
     patience = 3
     batch_size=1
     epochs = 20
