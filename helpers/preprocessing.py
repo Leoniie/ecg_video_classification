@@ -52,7 +52,7 @@ def preprocessing_scaled(x):
                 for k in np.arange(50):
                     a[l,k]= np.sum(image[2*l:2*l+2, 2*k:2*k+2])
             v_scaled[j,:,:] = a
-        x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]
+        x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]= v_scaled
 
 
         np.swapaxes(v,1,2)
