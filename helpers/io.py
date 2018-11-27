@@ -8,11 +8,11 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
 def inputter_videos_from_folder(data_folder):
-    '''
-    get a list of video x wehre each video is a numpy array in the format [n_frames,width,height]
+    """
+    get a list of video x where each video is a numpy array in the format [n_frames,width,height]
     with uint8 elements.
     argument: relative path to the data_folder from the source folder.
-    '''
+    """
     data_folder = os.path.join(dir_path, data_folder)
     x = []
     file_names = []
@@ -32,12 +32,12 @@ def inputter_videos_from_folder(data_folder):
     return x
 
 
-def inputter_csv_file(dir_path, csv_file):
-    '''
+def inputter_csv_file(_dir_path, csv_file):
+    """
     get a numpy array y of labels. the order follows the id of video.
     argument: relative path to the csv_file from the source folder.
-    '''
-    csv_file = os.path.join(dir_path, csv_file)
+    """
+    csv_file = os.path.join(_dir_path, csv_file)
     with open(csv_file, 'r') as csvfile:
         label_reader = pd.read_csv(csvfile)
         y = label_reader['y']
@@ -57,9 +57,9 @@ def outputter(array):
 
     s = "_"
     seq = (now, "solution.csv")
-    file_name = s.join(seq)  # type: str
-    s = "\\"
-    path = s.join("output", file_name)
+    _filename = s.join(seq)  # type: str
+    s = "/"
+    path = s.join("output", _filename)
 
     output.to_csv(path_or_buf=path, sep=',', na_rep='', float_format='U25',
                   header=True, index=False,

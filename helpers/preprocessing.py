@@ -1,7 +1,5 @@
 import numpy as np
-#
 
-# possible library to use 'skvideo.utils'
 
 def scaling():
     pass
