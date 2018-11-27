@@ -20,13 +20,9 @@ def normalize():
 
     # possibility to reduce values from 0 to 255
 
-def preprocessing(x):
+def preprocessing(x,max_time):
     #input: list of 3d arrays with shape (timesteps, height, width)
     #also includes normalization
-    max_time = 0
-
-    for i in np.arange(x.shape[0]):
-       max_time = np.max((max_time, (x[i]).shape[0]))
 
     x_array = np.zeros((x.shape[0],max_time,x[0].shape[1], x[0].shape[2]))
 
@@ -44,12 +40,19 @@ def preprocessing(x):
 
 
 
-def preprocessing_scaled(x):
-    #input: list of 3d arrays with shape (timesteps, height, width)
-    #also includes normalization
+def max_time(x):
+
     max_time = 0
     for i in np.arange(x.shape[0]):
         max_time = np.max((max_time, (x[i]).shape[0]))
+
+    return max_time
+
+
+def preprocessing_scaled(x,max_time):
+    #input: list of 3d arrays with shape (timesteps, height, width)
+    #also includes normalization
+
 
     x_array = np.zeros((x.shape[0], max_time, 50, 50))
 

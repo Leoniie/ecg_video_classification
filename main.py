@@ -19,7 +19,7 @@ from helpers.preprocessing import preprocessing, preprocessing_scaled
 from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from keras.utils import to_categorical
-from helpers.preprocessing import preprocessing, preprocessing_scaled
+from helpers.preprocessing import preprocessing, preprocessing_scaled,max_time
 
 
 
@@ -53,13 +53,15 @@ y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 
 x_test = inputter_videos_from_folder(test_folder)
 
+
+max_time_steps = np.max((max_time(x_test),max_time(x_train)))
+
 # Model
 #y_train = to_categorical(y_train)
 
 
-
-y = evaluate_sequential(preprocessing(x_train),
-                        to_categorical(y_train), preprocessing(x_test))
+y = evaluate_sequential(preprocessing(x_train, max_time_steps),
+                        to_categorical(y_train, max_time_steps), preprocessing(x_test))
 outputter(y)
 
 # plt.figure()
