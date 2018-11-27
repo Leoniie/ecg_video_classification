@@ -38,6 +38,8 @@ def preprocessing(x):
         v = v/d
         x_array[i,:v.shape[0],:v.shape[1],:v.shape[2]]= v
 
+    x_array = np.resize(x_array,(x_array.shape[0],x_array.shape[1], x_array.shape[2], x_array.shape[3], 1))
+
     return x_array
 
 
