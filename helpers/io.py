@@ -56,7 +56,7 @@ def outputter(array):
     now = datetime.now()
 
     s = "_"
-    seq = (now, "solution.csv")
+    seq = (str(now), "solution.csv")
     file_name = s.join(seq)  # type: str
     s = "\\"
     path = s.join("output", file_name)
