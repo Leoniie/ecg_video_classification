@@ -53,7 +53,7 @@ def outputter(array):
     output = pd.concat([ids, y], axis=1)
     output.columns = ["id", "y"]
 
-    now = datetime.now()
+    now = datetime.today()
 
     s = "_"
     seq = (str(now), "solution.csv")
