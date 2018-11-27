@@ -35,11 +35,12 @@ x_test = inputter_videos_from_folder(test_folder)
 
 max_time_steps = np.max((max_time(x_train), max_time(x_test)))
 
+# !!! scaling funktioniert noch nicht !!!
 y = evaluate_sequential(preprocessing(x_train, max_time_steps, normalizing=True,
-                                      scaling=True, resolution_type='resize', resolution=0.5),
+                                      scaling=False, resolution_type='resize', resolution=0.5),
                         to_categorical(y_train),
                         preprocessing(x_test, max_time_steps, normalizing=True,
-                                      scaling=True, resolution_type='resize', resolution=0.5))
+                                      scaling=False, resolution_type='resize', resolution=0.5))
 
 outputter(y)
 
