@@ -74,6 +74,8 @@ def preprocessing_scaled(x):
         np.swapaxes(v,0,1)
         x_array[i,:v_scaled.shape[0],:v_scaled.shape[1],:v_scaled.shape[2]]= v_scaled
 
+        x_array = np.resize(x_array, (x_array.shape[0], x_array.shape[1], x_array.shape[2], x_array.shape[3], 1))
+
         return x_array
 
 

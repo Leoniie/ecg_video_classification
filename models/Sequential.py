@@ -1,72 +1,61 @@
 # TODO: fix the error, maybe it's something with the input shape?
 #Malte
-from __future__ import print_function, division
-from datetime import datetime
+from keras.layers import Dense, Dropout, Activation, LSTM
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape
 from keras.models import Sequential
-from keras.layers import LSTM
-from keras.layers import Dense
-from keras.layers import Flatten
-from keras.layers import TimeDistributed
-from keras.losses import binary_crossentropy
-from helpers.metrics import final_metric
-from helpers.preprocessing import preprocessing_scaled
-from helpers.preprocessing import preprocessing
-from keras.layers import TimeDistributed
-from keras.layers.convolutional import MaxPooling2D
-from keras.layers.convolutional import Conv2D
-
-from keras.models import Sequential
-from keras.layers import  Conv2D, MaxPooling2D
+from keras.layers.wrappers import TimeDistributed
 from keras.callbacks import EarlyStopping
-from keras.layers import TimeDistributed
-from keras.layers import LSTM
+from datetime import datetime
+from keras.layers.pooling import GlobalAveragePooling1D
+from keras.optimizers import SGD
+from keras.utils import np_utils
+from keras.models import Model
+from helpers.metrics import final_metric, confusion_metric_vis
 
-from keras.layers import Dense
-
-def build_sequential(X, nb_steps, nb_width, nb_height, nb_channels):
+def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels, kernel_size):
     # define CNN model
-    cnn = Sequential()
-    cnn.add(Conv2D(nb_channels,activation='relu', padding = 'same',data_format="channels_last", input_shape=X.shape[1:]))
-    cnn.add(MaxPooling2D(pool_size=(2,2)))
-    cnn.add(Flatten())
     model = Sequential()
+    model.add(TimeDistributed(Conv2D(nb_channels, kernel_size, activation='relu'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
+    model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
+    model.add(TimeDistributed(Conv2D(7, (5, 5), activation='relu')))
+    model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
+    model.add(TimeDistributed(Dropout(0.5)))
 
-    #TODO: what is x_size?
+    model.add(TimeDistributed(Flatten()))
 
-
-    # define LSTM model
-    model.add(TimeDistributed(cnn))
-    model.add(LSTM(50, activation='relu'))
-    model.add(Dense(2,activation='softmax'))
-    model.compile(optimizer='adamax',
-              loss='binary_crossentropy',
-              metrics=['accuracy',final_metric])
+    model.add(LSTM(20, return_sequences=False, name="lstm_layer"))
+    model.add(dense(10, activation='relu',name='first_dense'))
+    model.add(Dense(2,activation='softmax',name="second_dense"))
+    model.compile(optimizer='adam',
+              loss='sparse_binary_crossentropy',
+              metrics=['accuracy', final_metric]) #,final_metric
 
     return model
 
 
 def evaluate_sequential(X, y):
     # Hyperparameter!
-    # hidden_layers=0  #not more than 2
-    nb_channels=16
+
+    nb_channels=3
     patience = 3
     batch_size=1
-    epochs = 150
+    epochs = 20
+    kernel_size = 2
 
     # X = np.atleast_2d(X)
     # if X.shape[0] == 1:
     #    X = X.T
 
-    nb_samples, nb_steps, nb_width, nb_height = X.shape
+    nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 
-    model = build_sequential(nb_steps, nb_width, nb_height, nb_channels)  # , Neurons = Neurons
+    model = build_sequential(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height, nb_channels=nb_channels, input_channels=input_channels)  # , Neurons = Neurons
     #print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
 
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
-    earlystop = EarlyStopping(monitor='val_final_metric', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_accuracy', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
