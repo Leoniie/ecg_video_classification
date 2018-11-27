@@ -59,7 +59,7 @@ x_test = inputter_videos_from_folder(test_folder)
 
 
 y = evaluate_sequential(preprocessing(x_train),
-                        to_categorical(y_train))
+                        to_categorical(y_train), preprocessing(x_test))
 outputter(y)
 
 # plt.figure()

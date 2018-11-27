@@ -1,16 +1,19 @@
 # TODO: fix the error, maybe it's something with the input shape?
 #Malte
-from keras.layers import Dense, Dropout, Activation, LSTM
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape
-from keras.models import Sequential
-from keras.layers.wrappers import TimeDistributed
-from keras.callbacks import EarlyStopping
 from datetime import datetime
-from keras.layers.pooling import GlobalAveragePooling1D
-from keras.optimizers import SGD
-from keras.utils import np_utils
-from keras.models import Model
+import numpy as np
+
+from keras.callbacks import EarlyStopping
+from keras.layers import Conv2D, MaxPooling2D, Flatten
+from keras.layers import Dense, Dropout, LSTM
+from keras.layers.wrappers import TimeDistributed
+from keras.models import Sequential
+from keras.utils import to_categorical
+
 from helpers.metrics import final_metric, confusion_metric_vis
+from helpers.preprocessing import preprocessing
+
+
 
 def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels, kernel_size):
     # define CNN model
@@ -24,16 +27,16 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model.add(TimeDistributed(Flatten()))
 
     model.add(LSTM(20, return_sequences=False, name="lstm_layer"))
-    model.add(dense(10, activation='relu',name='first_dense'))
-    model.add(Dense(2,activation='softmax',name="second_dense"))
+    model.add(Dense(10, activation='relu', name='first_dense'))
+    model.add(Dense(2, activation='softmax', name="second_dense"))
     model.compile(optimizer='adam',
-              loss='sparse_binary_crossentropy',
-              metrics=['accuracy', final_metric]) #,final_metric
+              loss='categorical_crossentropy',
+              metrics=['accuracy']) #,final_metric
 
     return model
 
 
-def evaluate_sequential(X, y):
+def evaluate_sequential(X, y, x_test):
     # Hyperparameter!
 
     nb_channels=3
@@ -64,17 +67,13 @@ def evaluate_sequential(X, y):
     time_after = datetime.now()
 
     print("fitting took {} seconds".format(time_after - time_before))
-    y_pred = np.argmax(
-        model.predict(preprocessing(x_test)),
-        axis=1)
+    y_pred = np.argmax(model.predict(x_test), axis=1)
     y_true = np.argmax(y, axis=1)
     try:
         confusion_metric_vis(y_true=y_true, y_pred=y_pred)
     except:
         pass
 
-    y_test = np.argmax(
-        model.predict(preprocessing(x_test)),
-        axis=1)
+    y_test = np.argmax(model.predict(x_test), axis=1)
 
     return y_test
