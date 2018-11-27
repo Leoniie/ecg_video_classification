@@ -9,7 +9,7 @@ import numpy as np
 def visualize(model, layername, validdata, validlabel):
     """
     :type model: keras model object
-    :type layername: string of final dense layer
+    :type layerName: string of final dense layer
     :type validdata: X data sample  for validation
     :type validlabel: y label sample for validation
     """
