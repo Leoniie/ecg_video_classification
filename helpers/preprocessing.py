@@ -63,8 +63,8 @@ def max_time(x):
     return maxtime
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5):
-    df = list_to_array(x_data, max_time)
+def preprocessing(x_data, maxtime, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5):
+    df = list_to_array(x_data, maxtime)
     if normalizing:
         df = normalize(df)
     if scaling:
