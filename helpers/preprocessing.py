@@ -37,7 +37,7 @@ def cropping():
 
 def normalize(df):
     df_max_frame = np.max(abs(df), 0)
-    df = df / df_max_frame
+    df = df / df_max_frame ###Hier hat der ein problem: invalid value encountered
     return df
 
 
@@ -65,8 +65,8 @@ def max_time(x):
     return maxtime
 
 
-def preprocessing(x_data, maxtime, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5):
-    df = list_to_array(x_data, maxtime)
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5):
+    df = list_to_array(x_data, max_time)
     if normalizing:
         df = normalize(df)
     if scaling:
