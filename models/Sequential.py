@@ -27,7 +27,6 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model.add(TimeDistributed(Conv2D(32, (3, 3), activation='relu', padding='same')))
     model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
     #model.add(TimeDistributed(Conv2D(32, (5, 5), activation='relu')))
-
     model.add(TimeDistributed(Flatten()))
     model.add(TimeDistributed(Dropout(0.5)))
     model.add(TimeDistributed(Dense(200)))
@@ -63,6 +62,7 @@ def evaluate_sequential(X, y, x_test):
 
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
+
 
     earlystop = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
