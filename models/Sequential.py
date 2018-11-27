@@ -60,7 +60,7 @@ def evaluate_sequential(X, y, x_test):
     model = build_sequential(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height, nb_channels=nb_channels, input_channels=input_channels)  # , Neurons = Neurons
     #print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
 
-
+    print(model.summary())
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
 
