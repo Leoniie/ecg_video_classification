@@ -10,8 +10,8 @@ def visualize(model, layername, validdata, validlabel):
     """
     :type model: keras model object
     :type layerName: string of final dense layer
-    :type validdata: X data for validation
-    :type validlabel: y label for validation
+    :type validdata: X data sample  for validation
+    :type validlabel: y label sample for validation
     """
     # Utility to search for layer index by name.
     # Alternatively we can specify this as -1 since it corresponds to the last layer.
