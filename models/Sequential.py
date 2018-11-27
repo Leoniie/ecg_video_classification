@@ -34,7 +34,7 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model.add(LSTM(256, return_sequences=False, name="lstm_layer", dropout=0.2))
     model.add(Dense(256, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
-    model.add(Dense(128, activation="relu", name="second dense"))
+    model.add(Dense(128, activation="relu", name="second_dense"))
     model.add(Dropout(0.4))
     model.add(Dense(2, activation='softmax', name="last_dense"))
     model.compile(optimizer='adam',
