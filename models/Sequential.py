@@ -14,24 +14,29 @@ from helpers.metrics import final_metric, confusion_metric_vis
 from helpers.preprocessing import preprocessing
 
 
-
+##https://github.com/sagarvegad/Video-Classification-CNN-and-LSTM-/blob/master/train_CNN.py
 def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels, kernel_size):
     # define CNN model
     model = Sequential()
     model.add(TimeDistributed(Conv2D(nb_channels, kernel_size, activation='relu'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
+    model.add(TimeDistributed(Dropout(0.2)))
+    model.add(TimeDistributed(Conv2D(nb_channels, (3, 3), activation='relu', padding='same')))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
-    model.add(TimeDistributed(Conv2D(7, (5, 5), activation='relu')))
+    model.add(TimeDistributed(Conv2D(32, (3, 3), activation='relu', padding='same')))
+    model.add(TimeDistributed(Dropout(0.2)))
+    model.add(TimeDistributed(Conv2D(32, (3, 3), activation='relu', padding='same')))
     model.add(TimeDistributed(MaxPooling2D((2, 2), strides=(2, 2))))
-    model.add(TimeDistributed(Dropout(0.5)))
-
+    #model.add(TimeDistributed(Conv2D(32, (5, 5), activation='relu')))
     model.add(TimeDistributed(Flatten()))
-
-    model.add(LSTM(15, return_sequences=False, name="lstm_layer"))
-    model.add(Dense(10, activation='relu', name='first_dense'))
+    model.add(TimeDistributed(Dropout(0.5)))
+    model.add(TimeDistributed(Dense(200)))
+    model.add(LSTM(256, return_sequences=False, name="lstm_layer", dropout=0.2))
+    model.add(Dense(256, activation='relu', name='first_dense'))
+    model.add(Dropout(0.5))
     model.add(Dense(2, activation='softmax', name="second_dense"))
     model.compile(optimizer='adam',
               loss='categorical_crossentropy',
-              metrics=['accuracy']) #,final_metric
+              metrics=['categorical_accuracy']) #,final_metric
 
     return model
 
@@ -55,10 +60,11 @@ def evaluate_sequential(X, y, x_test):
     model = build_sequential(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height, nb_channels=nb_channels, input_channels=input_channels)  # , Neurons = Neurons
     #print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
 
-
+    print(model.summary())
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
-    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.0, patience=patience, verbose=2,
+
+    earlystop = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,

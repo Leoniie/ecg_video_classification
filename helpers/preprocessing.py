@@ -57,15 +57,22 @@ def preprocessing(x,max_time):
     return x_array
 
 def max_time(x):
-    pass
-
-def preprocessing_scaled(x):
-
+    
     max_time = 0
     for i in np.arange(x.shape[0]):
         max_time = np.max((max_time, (x[i]).shape[0]))
 
     return max_time
+
+
+
+def preprocessing_scaled(x,max_time):
+    #input: list of 3d arrays with shape (timesteps, height, width)
+    #also includes normalization
+
+
+    x_array = np.zeros((x.shape[0], max_time, 50, 50))
+
 
 def preprocessing_scaled(x, max_time):
     # input: list of 3d arrays with shape (timesteps, height, width)
@@ -84,7 +91,6 @@ def preprocessing_scaled(x, max_time):
                     a[l, k] = np.sum(image[2 * l:2 * l + 2, 2 * k:2 * k + 2])
             v_scaled[j, :, :] = a
         d = np.max(abs(v_scaled))
-
         v_scaled = v_scaled/d
         np.swapaxes(v,1,2)
         np.swapaxes(v,0,1)
