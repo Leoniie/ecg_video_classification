@@ -7,7 +7,7 @@ from datetime import datetime
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 
-def inputter_videos_from_folder_array(data_folder):
+def inputter_videos_from_folder(data_folder):
     '''
     get a list of video x wehre each video is a numpy array in the format [n_frames,width,height]
     with uint8 elements.

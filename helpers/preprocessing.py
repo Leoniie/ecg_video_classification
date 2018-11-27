@@ -1,23 +1,28 @@
 import numpy as np
 #
-# TODO: Create preprocessing pipeline with plugable substeps
+
 # possible library to use 'skvideo.utils'
 
 def scaling():
     pass
     # TODO: use scikit video or cv2 to rescale the image/video
+# scaling is already done in function preprocessing
+
 #leonie
 def cropping():
     pass
     # TODO: reduce the image to moving pixels
+#in the first basic model we don't crop, since most of the pixels that don't move are zero anyway
 
 def normalize():
     pass
-    # TODO: add normalizer
+    #done in preprocessing anyway
+
     # possibility to reduce values from 0 to 255
 
 def preprocessing(x):
     #input: list of 3d arrays with shape (timesteps, height, width)
+    #also includes normalization
     max_time = 0
 
     for i in np.arange(x.shape[0]):
@@ -27,13 +32,21 @@ def preprocessing(x):
 
     for i in np.arange(x.shape[0]):
         v = x[i]
+        d = np.max(abs(v))
         np.swapaxes(v,1,2)
         np.swapaxes(v,0,1)
+        v = v/d
         x_array[i,:v.shape[0],:v.shape[1],:v.shape[2]]= v
+
+    x_array = np.resize(x_array,(x_array.shape[0],x_array.shape[1], x_array.shape[2], x_array.shape[3], 1))
+
+    return x_array
 
 
 
 def preprocessing_scaled(x):
+    #input: list of 3d arrays with shape (timesteps, height, width)
+    #also includes normalization
     max_time = 0
     for i in np.arange(x.shape[0]):
         max_time = np.max((max_time, (x[i]).shape[0]))
@@ -52,12 +65,15 @@ def preprocessing_scaled(x):
                 for k in np.arange(50):
                     a[l,k]= np.sum(image[2*l:2*l+2, 2*k:2*k+2])
             v_scaled[j,:,:] = a
-        x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]= v_scaled
-
-
+        d = np.max(abs(v_scaled))
+        v_scaled = v_scaled/d
         np.swapaxes(v,1,2)
         np.swapaxes(v,0,1)
-        x_array[i,:v_scaled.shape[0],:v_scaled.shape[1],:v_scaled.shape[2]]= v_scaled
+        x_array[i,:v_scaled.shape[0], :v_scaled.shape[1], :v_scaled.shape[2]]= v_scaled
+
+    x_array = np.resize(x_array, (x_array.shape[0], x_array.shape[1], x_array.shape[2], x_array.shape[3], 1))
+
+    return x_array
 
 
 
@@ -67,9 +83,10 @@ def preprocessing_scaled(x):
 
 
 
-    # TODO: add the relevant arguments to the function
+    #add the relevant arguments to the function
     # TODO: add binary decision variables
     # TODO: add the substeps to the function
     # TODO: return the preprocessed data set
     # TODO: add Exceptions
+
     # be aware, no hard coding to be adaptable for train and test data
