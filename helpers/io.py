@@ -59,7 +59,8 @@ def outputter(array):
     seq = (str(now), "solution.csv")
     file_name = s.join(seq)  # type: str
     s = "\\"
-    path = s.join("output", file_name)
+    sequence = ("output", file_name)
+    path = s.join(sequence)
 
     output.to_csv(path_or_buf=path, sep=',', na_rep='', float_format='U25',
                   header=True, index=False,
