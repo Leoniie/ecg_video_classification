@@ -26,7 +26,7 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
 
     model.add(TimeDistributed(Flatten()))
 
-    model.add(LSTM(20, return_sequences=False, name="lstm_layer"))
+    model.add(LSTM(15, return_sequences=False, name="lstm_layer"))
     model.add(Dense(10, activation='relu', name='first_dense'))
     model.add(Dense(2, activation='softmax', name="second_dense"))
     model.compile(optimizer='adam',
@@ -58,7 +58,7 @@ def evaluate_sequential(X, y, x_test):
 
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
-    earlystop = EarlyStopping(monitor='val_accuracy', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
