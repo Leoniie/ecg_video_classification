@@ -1,34 +1,21 @@
 # TODO: fix the error, maybe it's something with the input shape?
 #Malte
-from __future__ import print_function, division
-from datetime import datetime
+from keras.layers import Dense, Dropout, Activation, LSTM
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Reshape
 from keras.models import Sequential
-from keras.layers import LSTM
-from keras.layers import Dense
-from keras.layers import Flatten
-from keras.layers import TimeDistributed
-from keras.losses import binary_crossentropy
+from keras.layers.wrappers import TimeDistributed
+from keras.layers.pooling import GlobalAveragePooling1D
+from keras.optimizers import SGD
+from keras.utils import np_utils
+from keras.models import Model
 from helpers.metrics import final_metric
-from helpers.preprocessing import preprocessing_scaled
-from helpers.preprocessing import preprocessing
-from keras.layers import TimeDistributed
-from keras.layers.convolutional import MaxPooling2D
-from keras.layers.convolutional import Conv2D
-
-from keras.models import Sequential
-from keras.layers import  Conv2D, MaxPooling2D
-from keras.callbacks import EarlyStopping
-from keras.layers import TimeDistributed
-from keras.layers import LSTM
-
-from keras.layers import Dense
 
 def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels, kernel_size):
     # define CNN model
     model = Sequential()
     model.add(TimeDistributed(Conv2D(nb_channels, kernel_size,border_mode='same'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
     model.add(TimeDistributed(Activation('relu')))
-    model.add(TimeDistributed(Convolution2D(32, 3, 3)))
+    model.add(TimeDistributed(Conv2D(32, 3, 3)))
     model.add(TimeDistributed(Activation('relu')))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
     model.add(TimeDistributed(Dropout(0.25)))
