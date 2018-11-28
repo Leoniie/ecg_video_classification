@@ -19,7 +19,7 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     # define CNN model
     model = Sequential()
     model.add(TimeDistributed(Conv2D(nb_channels, kernel_size, activation='relu'), input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(TimeDistributed(Dropout(0.2)))
+    model.add(TimeDistributed(Dropout(0.5)))
     model.add(TimeDistributed(Conv2D(nb_channels, (3, 3), activation='relu', padding='same')))
     model.add(TimeDistributed(MaxPooling2D(pool_size=(2, 2))))
     model.add(TimeDistributed(Conv2D(32, (3, 3), activation='relu', padding='same')))
@@ -31,7 +31,7 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model.add(TimeDistributed(Flatten()))
     model.add(TimeDistributed(Dropout(0.5)))
     #model.add(TimeDistributed(Dense(200)))
-    model.add(LSTM(20, return_sequences=False, name="lstm_layer", dropout=0.2))
+    model.add(LSTM(40, return_sequences=False, name="lstm_layer", dropout=0.2))
     model.add(Dense(20, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
     #model.add(Dense(32, activation="relu", name="second_dense"))
