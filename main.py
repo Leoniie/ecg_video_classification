@@ -68,7 +68,7 @@ x_train = preprocessing(x_train, max_time_steps, normalizing=False,
 x_test = preprocessing(x_test, max_time_steps, normalizing=False,
                                       scaling=False, resolution=0.5, cut_time=True)
 
-y_train = to_categorical(y_train)
+#y_train = to_categorical(y_train)
 
 # !!! scaling funktioniert noch nicht !!!
 y = evaluate_sequential(x_train,
