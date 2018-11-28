@@ -36,10 +36,10 @@ def build_sequential(nb_steps, nb_width, nb_height, nb_channels, input_channels,
     model.add(Dropout(0.5))
     #model.add(Dense(32, activation="relu", name="second_dense"))
     #model.add(Dropout(0.4))
-    model.add(Dense(2, activation='softmax', name="last_dense"))
+    model.add(Dense(1, activation='softmax', name="last_dense"))
     model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['categorical_accuracy']) #,final_metric
+              loss='binary_crossentropy',
+              metrics=['accuracy'])#, final_metric
 
     return model
 
@@ -67,7 +67,7 @@ def evaluate_sequential(X, y, x_test):
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
 
-    earlystop = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_accuracy', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
