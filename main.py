@@ -62,10 +62,12 @@ max_time_steps = np.max((max_time(x_test),max_time(x_train)))
 
 max_time_steps = np.max((max_time(x_train),max_time(x_test)))
 
+
 x_train = preprocessing(x_train, max_time_steps, normalizing=False,
                                       scaling=False, resolution=0.5, cut_time=True)
 x_test = preprocessing(x_test, max_time_steps, normalizing=False,
                                       scaling=False, resolution=0.5, cut_time=True)
+master
 y_train = to_categorical(y_train)
 
 # !!! scaling funktioniert noch nicht !!!
