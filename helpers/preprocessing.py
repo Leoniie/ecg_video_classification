@@ -1,43 +1,23 @@
 import numpy as np
-from skimage.transform import rescale, resize, downscale_local_mean
+from scipy import ndimage
 
 
-def scale(df, resolution_type='resize', resolution=0.5):
+def scale(df, resolution=0.5):
     """
     :param df: 5d-array [sample, steps, height, width, channels]
-    :param resolution_type: resize, rescale, downsize
     :param resolution: float (0,1)
     """
 
-    # TODO: Changing resolution does not work for video YET. FUUCK
-
-    # change resolution
-    if resolution_type == 'resize':
-        df = resize(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
-                         int(df.shape[3] * resolution), df.shape[4]),
-                    mode='constant')
-    elif resolution_type == 'rescale':
-        df = rescale(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
-                          int(df.shape[3] * resolution), df.shape[4]),
-                     mode='constant')
-    elif resolution_type == 'downscale':
-        df = downscale_local_mean(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
-                                       int(df.shape[3] * resolution), df.shape[4]))
-    else:
-        print('Wrong resolution_type detected')
+    df = ndimage.zoom(input=df, zoom=(1, 1, resolution, resolution, 1), order=1)
+    print("Scaled")
 
     return df
 
 
-# leonie
-def cropping():
-    pass
-    # TODO: reduce the image to moving pixels
-
-
 def normalize(df):
-    df_max_frame = np.max(abs(df), 0)
-    df = df / df_max_frame ###Hier hat der ein problem: invalid value encountered
+    df_max_frame = np.max(abs(df), axis=0)
+    df = df / df_max_frame.astype(float)
+    print("Normalized")
     return df
 
 
@@ -66,20 +46,19 @@ def max_time(x):
 
 def cut_time_steps(x,length):
     x = x[:,:length, :, :, :]
+    print("Length Cut")
     return x
 
 
 
-def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5, cut_time=True,length=100):
+def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True,length=100):
     df = list_to_array(x_data, max_time)
+    if cut_time:
+        df = cut_time_steps(df, length)
     if normalizing:
         df = normalize(df)
     if scaling:
-        df = scale(df, resolution_type, resolution)
-    if cut_time:
-        df = cut_time_steps(df, length)
+        df = scale(df, resolution)
 
 
     return df
-
-    # TODO: add Exceptions

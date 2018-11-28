@@ -1,31 +1,13 @@
 import os
-import tensorflow as tf
 
-from models.Sequential import evaluate_sequential
-
-#from helpers.output import output_generator
-
-
-
-
-from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
-from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
-from keras.utils import to_categorical
-
-from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset, save_x
-from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
-
-
-from aml_example_files.tf_utils import save_tf_record, prob_positive_class_from_prediction, input_fn_from_dataset
-from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
-from keras.utils import to_categorical
-
-from helpers.preprocessing import preprocessing, max_time
-
-
-
-import matplotlib.pyplot as plt
 import numpy as np
+from keras.utils import to_categorical
+
+from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
+from helpers.preprocessing import preprocessing, max_time
+from models.Sequential_Conv3D import evaluate_sequential
+
+# from helpers.output import output_generator
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
@@ -62,12 +44,10 @@ max_time_steps = np.max((max_time(x_test),max_time(x_train)))
 
 max_time_steps = np.max((max_time(x_train),max_time(x_test)))
 
-
-x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-                                      scaling=False, resolution=0.5, cut_time=True)
-x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                                      scaling=False, resolution=0.5, cut_time=True)
-master
+x_train = preprocessing(x_train, max_time_steps, normalizing=True,
+                                      scaling=False, resolution=0.5, cut_time=True, length=50)
+x_test = preprocessing(x_test, max_time_steps, normalizing=True,
+                                      scaling=False, resolution=0.5, cut_time=True, length=50)
 y_train = to_categorical(y_train)
 
 # !!! scaling funktioniert noch nicht !!!
