@@ -1,38 +1,16 @@
 import numpy as np
-from skimage.transform import rescale, resize, downscale_local_mean
+from scipy import ndimage
 
 
-def scale(df, resolution_type='resize', resolution=0.5):
+def scale(df, resolution=0.5):
     """
     :param df: 5d-array [sample, steps, height, width, channels]
-    :param resolution_type: resize, rescale, downsize
     :param resolution: float (0,1)
     """
 
-    # TODO: Changing resolution does not work for video YET. FUUCK
-
-    # change resolution
-    if resolution_type == 'resize':
-        df = resize(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
-                         int(df.shape[3] * resolution), df.shape[4]),
-                    mode='constant')
-    elif resolution_type == 'rescale':
-        df = rescale(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
-                          int(df.shape[3] * resolution), df.shape[4]),
-                     mode='constant')
-    elif resolution_type == 'downscale':
-        df = downscale_local_mean(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
-                                       int(df.shape[3] * resolution), df.shape[4]))
-    else:
-        print('Wrong resolution_type detected')
+    df = ndimage.zoom(df, (1, 1, resolution, resolution, 1))
 
     return df
-
-
-# leonie
-def cropping():
-    pass
-    # TODO: reduce the image to moving pixels
 
 
 def normalize(df):
@@ -70,16 +48,13 @@ def cut_time_steps(x,length):
 
 
 
-def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5, cut_time=True,length=100):
+def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True,length=100):
     df = list_to_array(x_data, max_time)
     if normalizing:
         df = normalize(df)
     if scaling:
-        df = scale(df, resolution_type, resolution)
+        df = scale(df, resolution)
     if cut_time:
         df = cut_time_steps(df, length)
 
-
     return df
-
-    # TODO: add Exceptions
