@@ -28,10 +28,10 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model.add(Dropout(0.5))
     #model.add(Dense(32, activation="relu", name="second_dense"))
     #model.add(Dropout(0.4))
-    model.add(Dense(2, activation='softmax', name="last_dense"))
+    model.add(Dense(1, activation='softmax', name="last_dense"))
     model.compile(optimizer='adam',
-              loss='categorical_crossentropy',
-              metrics=['categorical_accuracy']) #,final_metric
+              loss='binary_crossentropy',
+              metrics=['accuracy']) #,final_metric
 
     return model
 
@@ -60,7 +60,7 @@ def evaluate_sequential(X, y, x_test):
     print('\nInput features:', X.shape, '\nOutput labels:', y.shape, sep='\n')
 
 
-    earlystop = EarlyStopping(monitor='val_categorical_accuracy', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_loss', min_delta=0.0, patience=patience, verbose=2,
                                               mode='auto')
     time_before = datetime.now()
     model.fit(X, y,
@@ -69,8 +69,11 @@ def evaluate_sequential(X, y, x_test):
     time_after = datetime.now()
 
     print("fitting took {} seconds".format(time_after - time_before))
-    y_pred = np.argmax(model.predict(x_test), axis=1)
-    y_true = np.argmax(y, axis=1)
+    #y_pred = np.argmax(model.predict(x_test), axis=1)
+    #y_true = np.argmax(y, axis=1)
+
+    y_pred = model.predict(x_test)
+    y_true = y
     try:
         confusion_metric_vis(y_true=y_true, y_pred=y_pred)
     except:

@@ -8,14 +8,16 @@ def scale(df, resolution=0.5):
     :param resolution: float (0,1)
     """
 
-    df = ndimage.zoom(df, (1, 1, resolution, resolution, 1))
+    df = ndimage.zoom(input=df, zoom=(1, 1, resolution, resolution, 1), order=1)
+    print("Scaled")
 
     return df
 
 
 def normalize(df):
-    df_max_frame = np.max(abs(df), 0)
-    df = df / df_max_frame ###Hier hat der ein problem: invalid value encountered
+    df_max_frame = np.max(abs(df), axis=0)
+    df = df / df_max_frame.astype(float)
+    print("Normalized")
     return df
 
 
@@ -44,17 +46,19 @@ def max_time(x):
 
 def cut_time_steps(x,length):
     x = x[:,:length, :, :, :]
+    print("Length Cut")
     return x
 
 
 
 def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True,length=100):
     df = list_to_array(x_data, max_time)
+    if cut_time:
+        df = cut_time_steps(df, length)
     if normalizing:
         df = normalize(df)
     if scaling:
         df = scale(df, resolution)
-    if cut_time:
-        df = cut_time_steps(df, length)
+
 
     return df

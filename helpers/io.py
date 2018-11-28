@@ -54,15 +54,16 @@ def outputter(array):
     output.columns = ["id", "y"]
 
     now = datetime.today()
-
+    print(now)
     s = "_"
     seq = (str(now), "solution.csv")
+    print(seq)
     file_name = s.join(seq)  # type: str
     s = "\\"
     sequence = ("output", file_name)
     path = s.join(sequence)
-
-    output.to_csv(path_or_buf=path, sep=',', na_rep='', float_format='U25',
+    print(path)
+    output.to_csv(path_or_buf='output/solution.csv', sep=',', na_rep='', float_format='U25',
                   header=True, index=False,
                   mode='w', encoding=None, compression=None,
                   quoting=None, quotechar='"', line_terminator='\n', chunksize=None, tupleize_cols=None,
