@@ -62,9 +62,12 @@ max_time_steps = np.max((max_time(x_test),max_time(x_train)))
 
 max_time_steps = np.max((max_time(x_train),max_time(x_test)))
 
-#TODO: parameter scaling, normalizing,.... for preprocessing
-y = evaluate_sequential(preprocessing(x_train,max_time_steps),
-                        to_categorical(y_train), preprocessing(x_test,max_time_steps))
+# !!! scaling funktioniert noch nicht !!!
+y = evaluate_sequential(preprocessing(x_train, max_time_steps, normalizing=True,
+                                      scaling=False, resolution_type='resize', resolution=0.5),
+                        to_categorical(y_train),
+                        preprocessing(x_test, max_time_steps, normalizing=True,
+                                      scaling=False, resolution_type='resize', resolution=0.5))
 
 outputter(y)
 
@@ -74,6 +77,3 @@ outputter(y)
 
 #x_train_full = preprocessing(x_train)
 #x_train_scaled = preprocessing_scaled(x_train)
-
-
-

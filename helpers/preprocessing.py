@@ -9,6 +9,8 @@ def scale(df, resolution_type='resize', resolution=0.5):
     :param resolution: float (0,1)
     """
 
+    # TODO: Changing resolution does not work for video YET. FUUCK
+
     # change resolution
     if resolution_type == 'resize':
         df = resize(df, (df.shape[0], df.shape[1], int(df.shape[2] * resolution),
