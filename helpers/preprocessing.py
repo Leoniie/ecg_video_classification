@@ -64,13 +64,21 @@ def max_time(x):
 
     return maxtime
 
+def cut_time_steps(x,length):
+    x = x[:,:length, :, :, :]
+    return x
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5):
+
+
+def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution_type='resize', resolution=0.5, cut_time=True,length=100):
     df = list_to_array(x_data, max_time)
     if normalizing:
         df = normalize(df)
     if scaling:
         df = scale(df, resolution_type, resolution)
+    if cut_time:
+        df = cut_time_steps(df, length)
+
 
     return df
 
