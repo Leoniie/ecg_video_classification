@@ -16,7 +16,6 @@ def retrieve_name(var):
             return names[0]
 
 
-
 def scale(df, resolution=0.5):
     """
     :param df: 5d-array [sample, steps, height, width, channels]
@@ -59,14 +58,14 @@ def max_time(x):
 
     return maxtime
 
-def cut_time_steps(x,length):
-    x = x[:,:length, :, :, :]
+
+def cut_time_steps(x, length):
+    x = x[:, :length, :, :, :]
     print("Length Cut")
     return x
 
 
-
-def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True,length=100):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100):
     df = list_to_array(x_data, max_time)
     if cut_time:
         df = cut_time_steps(df, length)

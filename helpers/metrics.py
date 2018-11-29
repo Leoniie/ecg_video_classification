@@ -1,13 +1,17 @@
 from sklearn.metrics import roc_auc_score
+import pandas as pd
+import numpy as np
+import keras.backend as K
 from sklearn.metrics import make_scorer
 from sklearn.metrics import r2_score
 
 
 def final_metric(y_true, y_pred):
-    roc_auc = roc_auc_score( y_true=y_true, y_score=y_pred )
+    roc_auc = roc_auc_score(y_true=y_true, y_score=y_pred)
     return roc_auc
 
-#confusion metric
+
+# confusion metric
 def confusion_metric_vis(y_true, y_pred):
     y_actu = pd.Series(np.ravel(y_true), name='Actual')
     y_pred = pd.Series(np.ravel(y_pred), name='Predicted')
