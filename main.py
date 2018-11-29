@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
-from helpers.preprocessing import preprocessing, max_time, edge_filter
+from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering
 from models.Sequential_Conv3D import evaluate_sequential
 
 # from helpers.output import output_generator
@@ -56,6 +56,11 @@ else:
     x_test = np.load('data/numpy/x_test.npy')
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
+x_train = gaussian_filtering(x_train, sigma=1)
+x_test = gaussian_filtering(x_test, sigma=1)
+
+x_train = cropping(x_train, left=35, right=15, up=30, down=20)
+x_test = cropping(x_test, left=35, right=15, up=30, down=20)
 
 
 y = evaluate_sequential(x_train,
