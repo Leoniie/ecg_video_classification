@@ -39,8 +39,7 @@ if PREPROCESSING:
 
     max_time_steps = np.max((max_time(x_train), max_time(x_test)))
 
-   # x_train = edge_filter(x_train,1)
-   # x_test = edge_filter(x_test,1)
+
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
