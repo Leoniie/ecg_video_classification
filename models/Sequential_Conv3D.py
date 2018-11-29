@@ -24,23 +24,13 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Flatten())
     model.add(Dense(20, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
     model.add(Dense(32, activation="relu", name="second_dense"))
     model.add(Dropout(0.4))
     model.add(Dense(1, activation='softmax', name="last_dense"))
-    model.compile(optimizer='adam',
+    model.compile(optimizer='rmsprop',
                   loss='binary_crossentropy',
                   metrics=['accuracy'])  # ,final_metric
 

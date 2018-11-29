@@ -2,6 +2,7 @@ import numpy as np
 from scipy import ndimage
 import os
 import inspect
+import scipy.ndimage
 
 
 def retrieve_name(var):
@@ -68,6 +69,18 @@ def cut_time_steps(x, length):
     x = x[:, :length, :, :, :]
     print("Length Cut")
     return x
+
+def gaussian_filtering(df, sigma):
+    #input: array x of size (n_samples, n_timesteps, height, width
+    #input: sigma for gaussioan filter
+    #output: array with same shape as x, filtered
+
+    for i in np.arange(df.shape[0]):
+        for j in np.arange(df.shape[1]):
+            df[i][j,:,:] = scipy.ndimage.gaussian_filter(df[i][j,:,:],sigma)
+
+    return df
+
 
 
 def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100):
