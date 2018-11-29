@@ -36,7 +36,7 @@ def normalize(df):
     return df
 
 def cropping(df, left, right, up, down):
-    df = df[:,:,up:down,left:right,:]
+    df = df[:,:,up:df.shape[3]-down,left:df.shape[4]-right,:]
 
     return df
 
