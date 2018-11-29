@@ -3,6 +3,8 @@ from scipy import ndimage
 import os
 import inspect
 import scipy.ndimage
+import pylab as pyl
+
 
 
 def retrieve_name(var):
@@ -71,7 +73,7 @@ def cut_time_steps(x, length):
     return x
 
 def gaussian_filtering(df, sigma):
-    #input: array x of size (n_samples, n_timesteps, height, width
+    #input: array x of size (n_samples, n_timesteps, height, width,1)
     #input: sigma for gaussioan filter
     #output: array with same shape as x, filtered
 
@@ -81,10 +83,37 @@ def gaussian_filtering(df, sigma):
 
     return df
 
+def edge_filter(df,sigma):
+# input: array x of size (n_samples, n_timesteps, height, width
+# the images need to be of size n x n (squares)!!!
+# input: sigma for edge filter
+# output: array with same shape as x, filtered
+# note: I have not looked at how this works. I copied it from http://nbviewer.jupyter.org/github/gpeyre/numerical-tours/blob/master/python/segmentation_1_edge_detection.ipynb#
+
+    n = df.shape[2]
+    cconv = lambda f, h: np.real(pyl.ifft2(pyl.fft2(f)*pyl.fft2(h)))
+    T = np.hstack((np.arange(0,n//2+1),np.arange(-n//2+1,0)))
+    [X2, X1] = np.meshgrid(T, T)
+    normalize = lambda h: h/np.sum(h)
+    h = lambda sigma: normalize(np.exp(-(X1**2 + X2**2)/(2*sigma**2)))
+    blur = lambda f, sigma: cconv(f, h(sigma))
+    s = np.hstack(([n-1],np.arange(0,n-1)))
+    nabla = lambda f: np.concatenate(((f - f[s,:])[:,:,np.newaxis], (f - f[:,s])[:,:,np.newaxis]), axis=2)
+
+    for i in np.arange(df.shape[0]):
+        for j in np.arange(df.shape[1]):
+            df[i,j,:,:,0]  = np.sqrt(np.sum(nabla(blur(df[i,j,:,:,0], sigma))**2, 2))
+
+    return df
+
 
 
 def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100):
     df = list_to_array(x_data, max_time)
+
+    df = edge_filter(df,sigma=1)
+
+
     if cut_time:
         df = cut_time_steps(df, length)
     if normalizing:
