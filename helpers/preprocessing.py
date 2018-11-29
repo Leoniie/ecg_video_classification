@@ -1,5 +1,13 @@
 import numpy as np
 from scipy import ndimage
+import os
+import inspect
+
+
+def namestr(obj, namespace = globals()):
+    name = [name for name in namespace if namespace[name] is obj]
+    print(name)
+    return name[0]
 
 
 def scale(df, resolution=0.5):
@@ -60,5 +68,14 @@ def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution=
     if scaling:
         df = scale(df, resolution)
 
+    try:
+        file = namestr(df)
+        print(file)
+        path = 'data/numpy/' + str(file)
+        path = os.path.abspath(path)
+        np.save(path, df)
+        print("Saved.")
+    except:
+        pass
 
     return df
