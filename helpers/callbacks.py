@@ -1,4 +1,5 @@
 from keras.callbacks import EarlyStopping, TensorBoard
+import os
 
 
 def stopper(patience: int, monitor: object) -> object:
@@ -9,10 +10,8 @@ def stopper(patience: int, monitor: object) -> object:
 
 
 def tensorboard():
-    # TODO: define the storage of the log file
-
     # TODO: configurate tensorboard
-
-    board = TensorBoard(log_dir='../logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False,
+    log_dir = os.path.relpath('logs')
+    board = TensorBoard(log_dir=log_dir, histogram_freq=0, batch_size=32, write_graph=True, write_grads=False,
                         write_images=False, update_freq='epoch')
     return board
