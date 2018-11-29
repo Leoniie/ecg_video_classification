@@ -14,18 +14,26 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model = Sequential()
     # Cropping upper half and quarter left quarter right
     model.add(Cropping3D(((0,0),(35,15), (25,25)), data_format="channels_last", input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Flatten())
     model.add(Dense(20, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
@@ -42,8 +50,8 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
 def evaluate_sequential(X, y, x_test):
     # Hyperparameter!
 
-    filter = 32
-    patience = 5
+    filter = 16
+    patience = 1
     batch_size = 1
     epochs = 40
     kernel_size = 3
