@@ -52,7 +52,8 @@ def outputter(array):
     ids = pd.DataFrame(ids)
     output = pd.concat([ids, y], axis=1)
     output.columns = ["id", "y"]
-
+    _dir = os.path.dirname(__file__)
+    filename = os.path.join(_dir, '/output/solution.csv')
     now = datetime.today()
     print(now)
     s = "_"
@@ -63,7 +64,7 @@ def outputter(array):
     sequence = ("output", file_name)
     path = s.join(sequence)
     print(path)
-    output.to_csv(path_or_buf='output/solution.csv', sep=',', na_rep='', float_format='U25',
+    output.to_csv(path_or_buf='/output/solution.csv', sep=',', na_rep='', float_format='U25',
                   header=True, index=False,
                   mode='w', encoding=None, compression=None,
                   quoting=None, quotechar='"', line_terminator='\n', chunksize=None, tupleize_cols=None,
