@@ -2,7 +2,7 @@ from keras.callbacks import EarlyStopping, TensorBoard
 import os
 
 
-def stopper(patience: int, monitor: object) -> object:
+def stopxper(patience: int, monitor: object) -> object:
     stop = EarlyStopping(monitor=monitor, min_delta=0, patience=patience,
                          verbose=2, mode='auto')
 
