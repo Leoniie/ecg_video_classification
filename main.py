@@ -12,7 +12,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
 RESOLUTION = 1.0
 LENGTH = 100
@@ -38,6 +38,9 @@ if PREPROCESSING:
     x_test = inputter_videos_from_folder(test_folder)
 
     max_time_steps = np.max((max_time(x_train), max_time(x_test)))
+
+
+
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
                             scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH)
