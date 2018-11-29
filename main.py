@@ -70,8 +70,3 @@ y = evaluate_sequential(x_train,
                         x_test)
 
 outputter(y)
-
-# plt.figure()
-# plt.imshow(a)
-# plt.savefig("small2.png")
-
