@@ -13,8 +13,8 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     # define CNN model
     model = Sequential()
     # Cropping upper half and quarter left quarter right
-    model.add(Cropping3D(((0,0),(35,15), (25,25)), data_format="channels_last", input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
+                     input_shape=(nb_steps, nb_width, nb_height, input_channels)))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
