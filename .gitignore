@@ -110,3 +110,8 @@ venv.bak/
 # tf
 tf_checkpoints
 tf_records
+logs
+output
+
+# data
+data/numpy

@@ -1,5 +1,20 @@
 import numpy as np
 from scipy import ndimage
+import os
+import inspect
+
+
+def retrieve_name(var):
+    """
+    Gets the name of var. Does it from the out most frame inner-wards.
+    :param var: variable to get name from.
+    :return: string
+    """
+    for fi in reversed(inspect.stack()):
+        names = [var_name for var_name, var_val in fi.frame.f_locals.items() if var_val is var]
+        if len(names) > 0:
+            return names[0]
+
 
 
 def scale(df, resolution=0.5):
@@ -60,5 +75,14 @@ def preprocessing( x_data, max_time, normalizing=True, scaling=True, resolution=
     if scaling:
         df = scale(df, resolution)
 
+    try:
+        file = retrieve_name(x_data)
+        print(file)
+        path = 'data/numpy/' + str(file)
+        path = os.path.abspath(path)
+        np.save(path, df)
+        print("Saved.")
+    except:
+        pass
 
     return df

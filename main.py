@@ -55,10 +55,6 @@ y_train = inputter_csv_file(dir_path, 'data/train_target.csv')
 x_test = inputter_videos_from_folder(test_folder)
 
 
-max_time_steps = np.max((max_time(x_test),max_time(x_train)))
-
-# Model
-#y_train = to_categorical(y_train)
 
 max_time_steps = np.max((max_time(x_train),max_time(x_test)))
 
@@ -68,18 +64,10 @@ x_train = preprocessing(x_train, max_time_steps, normalizing=False,
 x_test = preprocessing(x_test, max_time_steps, normalizing=False,
                                       scaling=False, resolution=0.5, cut_time=True)
 
-#y_train = to_categorical(y_train)
 
-# !!! scaling funktioniert noch nicht !!!
+
 y = evaluate_sequential(x_train,
                         y_train,
                         x_test)
 
 outputter(y)
-
-# plt.figure()
-# plt.imshow(a)
-# plt.savefig("small2.png")
-
-#x_train_full = preprocessing(x_train)
-#x_train_scaled = preprocessing_scaled(x_train)

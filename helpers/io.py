@@ -53,17 +53,16 @@ def outputter(array):
     output = pd.concat([ids, y], axis=1)
     output.columns = ["id", "y"]
 
-    now = datetime.today()
-    print(now)
+    cwd = os.getcwd()
+    date = datetime.date(datetime.now())
+    time = datetime.time(datetime.now())
     s = "_"
-    seq = (str(now), "solution.csv")
-    print(seq)
+    seq = (str(date), str(time.strftime('%H_%M_%S')), "solution.csv")
     file_name = s.join(seq)  # type: str
-    s = "\\"
-    sequence = ("output", file_name)
-    path = s.join(sequence)
+    path = cwd + "/output/" + file_name
+    path = os.path.abspath(path)
     print(path)
-    output.to_csv(path_or_buf='output/solution.csv', sep=',', na_rep='', float_format='U25',
+    output.to_csv(path_or_buf=path, sep=',', na_rep='', float_format='U25',
                   header=True, index=False,
                   mode='w', encoding=None, compression=None,
                   quoting=None, quotechar='"', line_terminator='\n', chunksize=None, tupleize_cols=None,
