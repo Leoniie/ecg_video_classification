@@ -34,6 +34,11 @@ def normalize(df):
     print("Normalized")
     return df
 
+def cropping(df, left, right, up, down):
+    df = df[:,:,up:down,left:right,:]
+
+    return df
+
 
 def list_to_array(x_data, maxtime):
     x_array = np.zeros((x_data.shape[0], maxtime, x_data[0].shape[1], x_data[0].shape[2]))
