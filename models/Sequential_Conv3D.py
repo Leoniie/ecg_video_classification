@@ -12,20 +12,25 @@ from helpers.metrics import confusion_metric_vis
 def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kernel_size):
     # define CNN model
     model = Sequential()
-    model.add(Cropping3D(1, data_format="channels_last", input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(Conv3D(filter, kernel_size, activation='relu', data_format='channels_last'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+    # Cropping upper half and quarter left quarter right
+    model.add(Cropping3D(((0,0),(35,15), (25,25)), data_format="channels_last", input_shape=(nb_steps, nb_width, nb_height, input_channels)))
+    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
     model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2)))
     model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2)))
+    model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
     model.add(Conv3D(filter, kernel_size, activation='relu', padding='same', data_format='channels_last'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2)))
     model.add(Flatten())
     model.add(Dense(20, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
-    # model.add(Dense(32, activation="relu", name="second_dense"))
-    # model.add(Dropout(0.4))
+    model.add(Dense(32, activation="relu", name="second_dense"))
+    model.add(Dropout(0.4))
     model.add(Dense(1, activation='softmax', name="last_dense"))
     model.compile(optimizer='adam',
                   loss='binary_crossentropy',
