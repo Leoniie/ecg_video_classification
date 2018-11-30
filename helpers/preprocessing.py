@@ -1,11 +1,3 @@
-import numpy as np
-from scipy import ndimage
-import os
-import inspect
-import scipy.ndimage
-import pylab as pyl
-import cv2
-from matplotlib import pyplot as plt
 
 
 def retrieve_name(var):
