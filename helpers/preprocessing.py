@@ -44,20 +44,19 @@ def cropping(df, left, right, up, down):
     print("Shape after Cropping: ", df.shape)
     return df
 
-
 def list_to_array(x_data, maxtime):
     x_array = np.zeros((x_data.shape[0], maxtime, x_data[0].shape[1], x_data[0].shape[2]))
-
+    min_list = []
     for i in np.arange(x_data.shape[0]):
         v = x_data[i]
         x_array[i, :v.shape[0], :v.shape[1], :v.shape[2]] = v
-        print(x_array)
+        min_list.append(x_data[i].shape[0])
 
-    # swap time axis from 3rd to 2nd dimension
-    np.swapaxes(x_array, 2, 3)
-    np.swapaxes(x_array, 2, 1)
+    x_array = x_array[:,:,:,:,np.newaxis]
 
-    x_array = np.resize(x_array, (x_array.shape[0], x_array.shape[1], x_array.shape[2], x_array.shape[3], 1))
+    plt.hist(min_list, normed=True, bins=30)
+    plt.ylabel('Frequency')
+    plt.show()
 
     return x_array
 
@@ -68,6 +67,14 @@ def max_time(x):
         maxtime = np.max((maxtime, (x[i]).shape[0]))
 
     return maxtime
+
+
+def min_time(x):
+    mintime = 1000
+    for i in np.arange(x.shape[0]):
+        mintime = np.min((mintime, (x[i]).shape[0]))
+
+    return mintime
 
 
 def cut_time_steps(x, length):
@@ -113,7 +120,7 @@ def edge_filter(df,sigma):
 
 
 def canny_filter(df):
-
+    df = df.astype(np.uint8)
     for i in range(df.shape[0]):
         for j in range(df.shape[1]):
             edges = cv2.Canny(df[i, j, :, :, :], df.shape[2], df.shape[3])
