@@ -24,8 +24,6 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Reshape(target_shape=(nb_steps, 32)))
     model.add(Conv1D(8, kernel_size=3, activation='relu'))
     model.add(MaxPooling1D())
