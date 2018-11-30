@@ -6,7 +6,7 @@ import scipy.ndimage
 import pylab as pyl
 import cv2
 from matplotlib import pyplot as plt
-
+from helpers.plotter import plot
 
 def retrieve_name(var):
     """
@@ -51,6 +51,7 @@ def list_to_array(x_data, maxtime):
     for i in np.arange(x_data.shape[0]):
         v = x_data[i]
         x_array[i, :v.shape[0], :v.shape[1], :v.shape[2]] = v
+        print(x_array)
 
     # swap time axis from 3rd to 2nd dimension
     np.swapaxes(x_array, 2, 3)
@@ -115,24 +116,35 @@ def canny_filter(df):
 
     for i in range(df.shape[0]):
         for j in range(df.shape[1]):
-            edges = cv2.Canny(df[i, j, :, :, 0], 100, 100)
+            edges = cv2.Canny(df[i, j, :, :, :], df.shape[2], df.shape[3])
             df[i,j,:,:,0] = edges
 
     return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 25):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 25, filter = 'edge'):
     df = list_to_array(x_data, max_time)
-
+    plot(df)
     if cut_time:
         df = cut_time_steps(df, length)
+        plot(df)
     if normalizing:
         df = normalize(df)
+        plot(df)
     if scaling:
         df = scale(df, resolution)
+        plot(df)
+    if filter == 'edge':
+        df = edge_filter(df, sigma=1)
+        plot(df)
+    elif filter == 'canny':
+        df = canny_filter(df)
+        plot(df)
+    else:
+        pass
 
-    df = edge_filter(df, sigma=1)
     df = cropping(df, left=crop, right=crop, up=crop, down=crop)
+    plot(df)
 
 
     try:

@@ -4,6 +4,7 @@ import numpy as np
 
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter
+
 from models.Sequential_Conv3D import evaluate_sequential
 
 # from helpers.output import output_generator
@@ -12,9 +13,9 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
-RESOLUTION = 1.0
+RESOLUTION = 0.5
 LENGTH = 100
 
 
@@ -43,9 +44,9 @@ if PREPROCESSING:
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-                            scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH, crop=25)
+                            scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH, crop=0, filter='edge')
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=True, resolution=RESOLUTION, cut_time=True, length= LENGTH, crop=25)
+                           scaling=True, resolution=RESOLUTION, cut_time=True, length= LENGTH, crop=0, filter='edge')
 
 else:
 
