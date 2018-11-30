@@ -56,7 +56,7 @@ def evaluate_sequential(X, y, x_test):
     batch_size = 1
     epochs = 40
     kernel_size = 3
-
+    print("Shape before Model: ", X.shape)
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 
