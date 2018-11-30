@@ -13,27 +13,25 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     # define CNN model
     model = Sequential()
     # Cropping upper half and quarter left quarter right
-    model.add(Conv3D(8, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
+    model.add(Conv3D(16, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
                      input_shape=(nb_steps, nb_width, nb_height, input_channels)))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(16, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(16, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
+    model.add(Conv3D(64, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Reshape(target_shape=(nb_steps, 32)))
-    model.add(Conv1D(8, kernel_size=3, activation='relu'))
-    model.add(MaxPooling1D())
-    model.add(Conv1D(16, kernel_size=3,  activation='relu'))
+    model.add(Conv3D(64, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
+    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Reshape(target_shape=(nb_steps, -1)))
+    model.add(Conv1D(16, kernel_size=3, activation='relu'))
     model.add(MaxPooling1D())
     model.add(Conv1D(32, kernel_size=3,  activation='relu'))
     model.add(MaxPooling1D())
-    model.add(Conv1D(32, kernel_size=3,  activation='relu'))
+    model.add(Conv1D(64, kernel_size=3,  activation='relu'))
+    model.add(MaxPooling1D())
+    model.add(Conv1D(128, kernel_size=3,  activation='relu'))
     model.add(MaxPooling1D())
     model.add(Flatten())
     model.add(Dense(32, activation='relu', name='first_dense'))
@@ -53,10 +51,10 @@ def evaluate_sequential(X, y, x_test):
 
     #filter = 32 disabled
     patience = 2
-    batch_size = 1
+    batch_size = 8
     epochs = 40
     kernel_size = 3
-
+    print("Shape before Model: ", X.shape)
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 

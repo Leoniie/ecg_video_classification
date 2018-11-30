@@ -12,7 +12,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = True
+PREPROCESSING = False
 # Preprocessing parameter
 RESOLUTION = 1.0
 LENGTH = 100
@@ -43,9 +43,9 @@ if PREPROCESSING:
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-                            scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH, crop=0)
+                            scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH, crop=25)
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=True, resolution=RESOLUTION, cut_time=True, length= LENGTH, crop=0)
+                           scaling=True, resolution=RESOLUTION, cut_time=True, length= LENGTH, crop=25)
 
 else:
 

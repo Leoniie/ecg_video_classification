@@ -4,7 +4,8 @@ import os
 import inspect
 import scipy.ndimage
 import pylab as pyl
-
+import cv2
+from matplotlib import pyplot as plt
 
 
 def retrieve_name(var):
@@ -38,8 +39,9 @@ def normalize(df):
     return df
 
 def cropping(df, left, right, up, down):
-    df = df[:,:,up:df.shape[3]-down,left:df.shape[4]-right,:]
-
+    print("Shape before Cropping: ", df.shape)
+    df = df[:,:,up:df.shape[2]-down,left:df.shape[3]-right,:]
+    print("Shape after Cropping: ", df.shape)
     return df
 
 
@@ -88,8 +90,9 @@ def edge_filter(df,sigma):
 # the images need to be of size n x n (squares)!!!
 # input: sigma for edge filter
 # output: array with same shape as x, filtered
-# note: I have not looked at how this works. I copied it from http://nbviewer.jupyter.org/github/gpeyre/numerical-tours/blob/master/python/segmentation_1_edge_detection.ipynb#
-
+# note: I have not looked at how this works. I copied it from
+# http://nbviewer.jupyter.org/github/gpeyre/numerical-tours/blob/master/python/segmentation_1_edge_detection.ipynb#
+    print("Shape before Edge Filter: ",df.shape)
     n = df.shape[2]
     cconv = lambda f, h: np.real(pyl.ifft2(pyl.fft2(f)*pyl.fft2(h)))
     T = np.hstack((np.arange(0,n//2+1),np.arange(-n//2+1,0)))
@@ -103,16 +106,23 @@ def edge_filter(df,sigma):
     for i in np.arange(df.shape[0]):
         for j in np.arange(df.shape[1]):
             df[i,j,:,:,0]  = np.sqrt(np.sum(nabla(blur(df[i,j,:,:,0], sigma))**2, 2))
+    print("Shape after Edge Filter: ",df.shape)
+    print('Edge filtered')
+    return df
+
+
+def canny_filter(df):
+
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            edges = cv2.Canny(df[i, j, :, :, 0], 100, 100)
+            df[i,j,:,:,0] = edges
 
     return df
 
 
-
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 0):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 25):
     df = list_to_array(x_data, max_time)
-
-
-
 
     if cut_time:
         df = cut_time_steps(df, length)
