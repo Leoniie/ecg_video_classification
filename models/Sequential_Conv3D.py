@@ -5,7 +5,7 @@ from keras.callbacks import EarlyStopping
 from keras.layers import Conv3D, MaxPooling3D, Flatten, Conv1D, MaxPooling1D, Reshape
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
-
+from helpers.plotter import plot
 from helpers.metrics import confusion_metric_vis
 
 
