@@ -84,7 +84,7 @@ def gaussian_filtering(df, sigma):
     return df
 
 def edge_filter(df,sigma):
-# input: array x of size (n_samples, n_timesteps, height, width
+# input: array x of size (n_samples, n_timesteps, height, width)
 # the images need to be of size n x n (squares)!!!
 # input: sigma for edge filter
 # output: array with same shape as x, filtered
@@ -108,10 +108,10 @@ def edge_filter(df,sigma):
 
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 0):
     df = list_to_array(x_data, max_time)
 
-    df = edge_filter(df,sigma=1)
+
 
 
     if cut_time:
@@ -120,6 +120,10 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
         df = normalize(df)
     if scaling:
         df = scale(df, resolution)
+
+    df = edge_filter(df, sigma=1)
+    df = cropping(df, left=crop, right=crop, up=crop, down=crop)
+
 
     try:
         file = retrieve_name(x_data)
