@@ -2,7 +2,7 @@ from datetime import datetime
 
 import numpy as np
 from keras.callbacks import EarlyStopping
-from keras.layers import Conv3D, MaxPooling3D, Flatten, Cropping3D
+from keras.layers import Conv3D, MaxPooling3D, Flatten, Conv1D, MaxPooling1D, Reshape
 from keras.layers import Dense, Dropout
 from keras.models import Sequential
 
@@ -13,19 +13,28 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     # define CNN model
     model = Sequential()
     # Cropping upper half and quarter left quarter right
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
+    model.add(Conv3D(8, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
                      input_shape=(nb_steps, nb_width, nb_height, input_channels)))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(16, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(16, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(filter, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last'))
+    model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(Reshape(target_shape=(nb_steps, 32)))
+    model.add(Conv1D(8, kernel_size=3, activation='relu'))
+    model.add(MaxPooling1D())
+    model.add(Conv1D(16, kernel_size=3,  activation='relu'))
+    model.add(MaxPooling1D())
+    model.add(Conv1D(32, kernel_size=3,  activation='relu'))
+    model.add(MaxPooling1D())
+    model.add(Conv1D(32, kernel_size=3,  activation='relu'))
+    model.add(MaxPooling1D())
     model.add(Flatten())
-    model.add(Dense(20, activation='relu', name='first_dense'))
+    model.add(Dense(32, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
     model.add(Dense(32, activation="relu", name="second_dense"))
     model.add(Dropout(0.4))
@@ -40,15 +49,11 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
 def evaluate_sequential(X, y, x_test):
     # Hyperparameter!
 
-    filter = 16
-    patience = 1
+    #filter = 32 disabled
+    patience = 2
     batch_size = 1
     epochs = 40
     kernel_size = 3
-
-    # X = np.atleast_2d(X)
-    # if X.shape[0] == 1:
-    #    X = X.T
 
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
@@ -72,13 +77,13 @@ def evaluate_sequential(X, y, x_test):
     # y_pred = np.argmax(model.predict(x_test), axis=1)
     # y_true = np.argmax(y, axis=1)
 
-    y_pred = model.predict(x_test)
+    y_pred = model.predict(X)
     y_true = y
     try:
         confusion_metric_vis(y_true=y_true, y_pred=y_pred)
     except:
         pass
 
-    y_test = np.argmax(model.predict(x_test), axis=1)
+    y_test = model.predict(x_test)
 
     return y_test

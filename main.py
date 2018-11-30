@@ -12,7 +12,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
 RESOLUTION = 1.0
 LENGTH = 100
@@ -39,6 +39,9 @@ if PREPROCESSING:
 
     max_time_steps = np.max((max_time(x_train), max_time(x_test)))
 
+
+
+
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
                             scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH)
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
@@ -54,10 +57,14 @@ else:
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
 x_train = gaussian_filtering(x_train, sigma=1)
+print("Current shape for x_train: ", x_train.shape)
 x_test = gaussian_filtering(x_test, sigma=1)
+print("Current shape for x_test: ", x_test.shape)
 
 x_train = cropping(x_train, left=35, right=15, up=30, down=20)
+print("Current shape for x_train: ", x_train.shape)
 x_test = cropping(x_test, left=35, right=15, up=30, down=20)
+print("Current shape for x_train: ", x_test.shape)
 
 
 y = evaluate_sequential(x_train,
