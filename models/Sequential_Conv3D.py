@@ -15,31 +15,31 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     # Cropping upper half and quarter left quarter right
     model.add(Conv3D(16, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
                      input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(64, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(64, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(1, 2, 2), strides=(1,2,2)))
-    model.add(Reshape(target_shape=(nb_steps, -1)))
-    model.add(Conv1D(16, kernel_size=3, activation='relu'))
-    model.add(MaxPooling1D())
-    model.add(Conv1D(32, kernel_size=3,  activation='relu'))
-    model.add(MaxPooling1D())
-    model.add(Conv1D(64, kernel_size=3,  activation='relu'))
-    model.add(MaxPooling1D())
-    model.add(Conv1D(128, kernel_size=3,  activation='relu'))
-    model.add(MaxPooling1D())
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
+    #model.add(Reshape(target_shape=(nb_steps, -1)))
+    #model.add(Conv1D(16, kernel_size=3, activation='relu'))
+    #model.add(MaxPooling1D())
+    #model.add(Conv1D(32, kernel_size=3,  activation='relu'))
+    #model.add(MaxPooling1D())
+    #model.add(Conv1D(64, kernel_size=3,  activation='relu'))
+    #model.add(MaxPooling1D())
+    #model.add(Conv1D(128, kernel_size=3,  activation='relu'))
+    #model.add(MaxPooling1D())
     model.add(Flatten())
     model.add(Dense(32, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
     model.add(Dense(32, activation="relu", name="second_dense"))
     model.add(Dropout(0.4))
     model.add(Dense(1, activation='softmax', name="last_dense"))
-    model.compile(optimizer='rmsprop',
+    model.compile(optimizer='adagrad',
                   loss='binary_crossentropy',
                   metrics=['accuracy'])  # ,final_metric
 
@@ -50,14 +50,15 @@ def evaluate_sequential(X, y, x_test):
     # Hyperparameter!
 
     #filter = 32 disabled
-    patience = 2
-    batch_size = 8
+    patience = 1
+    batch_size = 1
     epochs = 40
-    kernel_size = 3
+    kernel_size = 5
     print("Shape before Model: ", X.shape)
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 
+    plot(X)
     model = build_sequential(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height,
                              filter=filter, input_channels=input_channels)  # , Neurons = Neurons
     # print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
@@ -74,8 +75,6 @@ def evaluate_sequential(X, y, x_test):
     time_after = datetime.now()
 
     print("fitting took {} seconds".format(time_after - time_before))
-    # y_pred = np.argmax(model.predict(x_test), axis=1)
-    # y_true = np.argmax(y, axis=1)
 
     y_pred = model.predict(X)
     y_true = y
