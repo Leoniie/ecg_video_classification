@@ -4,7 +4,8 @@ import os
 import inspect
 import scipy.ndimage
 import pylab as pyl
-
+import cv2
+from matplotlib import pyplot as plt
 
 
 def retrieve_name(var):
@@ -109,6 +110,15 @@ def edge_filter(df,sigma):
     print('Edge filtered')
     return df
 
+
+def canny_filter(df):
+
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            edges = cv2.Canny(df[i, j, :, :, 0], 100, 100)
+            df[i,j,:,:,0] = edges
+
+    return df
 
 
 def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 25):
