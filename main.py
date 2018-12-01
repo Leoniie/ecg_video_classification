@@ -3,7 +3,8 @@ import os
 import numpy as np
 
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
-from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter
+from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
+
 from models.Sequential_Conv3D import evaluate_sequential
 
 # from helpers.output import output_generator
@@ -12,10 +13,10 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
 RESOLUTION = 1.0
-LENGTH = 100
+
 
 
 if PREPROCESSING:
@@ -39,13 +40,15 @@ if PREPROCESSING:
 
     max_time_steps = np.max((max_time(x_train), max_time(x_test)))
 
+    min_time_steps = np.min((min_time(x_train), min_time(x_test)))
+
 
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-                            scaling=True, resolution=RESOLUTION, cut_time=True, length = LENGTH, crop=25)
+                            scaling=True, resolution=RESOLUTION, cut_time=True, length = min_time_steps-10, crop=0, filter='finder')
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=True, resolution=RESOLUTION, cut_time=True, length= LENGTH, crop=25)
+                           scaling=True, resolution=RESOLUTION, cut_time=True, length= min_time_steps-10, crop=0, filter='finder')
 
 else:
 
@@ -55,7 +58,6 @@ else:
     print("Loaded: x_train with shape {}".format(x_train.shape))
     x_test = np.load('data/numpy/x_test.npy')
     print("Loaded: x_test with shape {}".format(x_test.shape))
-
 
 
 y = evaluate_sequential(x_train,

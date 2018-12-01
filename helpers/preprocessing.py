@@ -6,6 +6,7 @@ import scipy.ndimage
 import pylab as pyl
 #import cv2
 from matplotlib import pyplot as plt
+from helpers.plotter import plot
 
 
 def retrieve_name(var):
@@ -38,25 +39,27 @@ def normalize(df):
     print("Normalized")
     return df
 
+
 def cropping(df, left, right, up, down):
     print("Shape before Cropping: ", df.shape)
-    df = df[:,:,up:df.shape[2]-down,left:df.shape[3]-right,:]
+    df = df[:, :, up:df.shape[2] - down, left:df.shape[3] - right, :]
     print("Shape after Cropping: ", df.shape)
     return df
 
 
 def list_to_array(x_data, maxtime):
     x_array = np.zeros((x_data.shape[0], maxtime, x_data[0].shape[1], x_data[0].shape[2]))
-
+    min_list = []
     for i in np.arange(x_data.shape[0]):
         v = x_data[i]
         x_array[i, :v.shape[0], :v.shape[1], :v.shape[2]] = v
+        min_list.append(x_data[i].shape[0])
 
-    # swap time axis from 3rd to 2nd dimension
-    np.swapaxes(x_array, 2, 3)
-    np.swapaxes(x_array, 2, 1)
+    x_array = x_array[:, :, :, :, np.newaxis]
 
-    x_array = np.resize(x_array, (x_array.shape[0], x_array.shape[1], x_array.shape[2], x_array.shape[3], 1))
+    plt.hist(min_list, normed=True, bins=30)
+    plt.ylabel('Frequency')
+    plt.show()
 
     return x_array
 
@@ -69,71 +72,108 @@ def max_time(x):
     return maxtime
 
 
+def min_time(x):
+    mintime = 1000
+    for i in np.arange(x.shape[0]):
+        mintime = np.min((mintime, (x[i]).shape[0]))
+
+    return mintime
+
+
 def cut_time_steps(x, length):
     x = x[:, :length, :, :, :]
     print("Length Cut")
     return x
 
+
 def gaussian_filtering(df, sigma):
-    #input: array x of size (n_samples, n_timesteps, height, width,1)
-    #input: sigma for gaussioan filter
-    #output: array with same shape as x, filtered
+    # input: array x of size (n_samples, n_timesteps, height, width,1)
+    # input: sigma for gaussioan filter
+    # output: array with same shape as x, filtered
 
     for i in np.arange(df.shape[0]):
         for j in np.arange(df.shape[1]):
-            df[i][j,:,:] = scipy.ndimage.gaussian_filter(df[i][j,:,:],sigma)
+            df[i][j, :, :] = scipy.ndimage.gaussian_filter(df[i][j, :, :], sigma)
 
     return df
 
-def edge_filter(df,sigma):
-# input: array x of size (n_samples, n_timesteps, height, width)
-# the images need to be of size n x n (squares)!!!
-# input: sigma for edge filter
-# output: array with same shape as x, filtered
-# note: I have not looked at how this works. I copied it from
-# http://nbviewer.jupyter.org/github/gpeyre/numerical-tours/blob/master/python/segmentation_1_edge_detection.ipynb#
-    print("Shape before Edge Filter: ",df.shape)
+
+def finderContour(df, tresh_min=5, tresh_max=255):
+    df = df.astype(np.uint8)
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            img = cv2.convertScaleAbs(df[i, j, :, :, 0])
+            (thresh, im_bw) = cv2.threshold(img, tresh_min, tresh_max, 0)
+            im2, contours, hierarchy = cv2.findContours(im_bw, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            drawing = np.zeros((img.shape[0], img.shape[1]), np.uint8)
+            img = cv2.drawContours(drawing, contours, -1, 255, 1)
+            df[i, j, :, :, 0] = img
+
+    return df
+
+
+def edge_filter(df, sigma):
+    # input: array x of size (n_samples, n_timesteps, height, width)
+    # the images need to be of size n x n (squares)!!!
+    # input: sigma for edge filter
+    # output: array with same shape as x, filtered
+    # note: I have not looked at how this works. I copied it from
+    # http://nbviewer.jupyter.org/github/gpeyre/numerical-tours/blob/master/python/segmentation_1_edge_detection.ipynb#
+    print("Shape before Edge Filter: ", df.shape)
     n = df.shape[2]
-    cconv = lambda f, h: np.real(pyl.ifft2(pyl.fft2(f)*pyl.fft2(h)))
-    T = np.hstack((np.arange(0,n//2+1),np.arange(-n//2+1,0)))
+    cconv = lambda f, h: np.real(pyl.ifft2(pyl.fft2(f) * pyl.fft2(h)))
+    T = np.hstack((np.arange(0, n // 2 + 1), np.arange(-n // 2 + 1, 0)))
     [X2, X1] = np.meshgrid(T, T)
-    normalize = lambda h: h/np.sum(h)
-    h = lambda sigma: normalize(np.exp(-(X1**2 + X2**2)/(2*sigma**2)))
+    normalize = lambda h: h / np.sum(h)
+    h = lambda sigma: normalize(np.exp(-(X1 ** 2 + X2 ** 2) / (2 * sigma ** 2)))
     blur = lambda f, sigma: cconv(f, h(sigma))
-    s = np.hstack(([n-1],np.arange(0,n-1)))
-    nabla = lambda f: np.concatenate(((f - f[s,:])[:,:,np.newaxis], (f - f[:,s])[:,:,np.newaxis]), axis=2)
+    s = np.hstack(([n - 1], np.arange(0, n - 1)))
+    nabla = lambda f: np.concatenate(((f - f[s, :])[:, :, np.newaxis], (f - f[:, s])[:, :, np.newaxis]), axis=2)
 
     for i in np.arange(df.shape[0]):
         for j in np.arange(df.shape[1]):
-            df[i,j,:,:,0]  = np.sqrt(np.sum(nabla(blur(df[i,j,:,:,0], sigma))**2, 2))
-    print("Shape after Edge Filter: ",df.shape)
+            df[i, j, :, :, 0] = np.sqrt(np.sum(nabla(blur(df[i, j, :, :, 0], sigma)) ** 2, 2))
+    print("Shape after Edge Filter: ", df.shape)
     print('Edge filtered')
     return df
 
 
-#def canny_filter(df):
-#
- #   for i in range(df.shape[0]):
-  #      for j in range(df.shape[1]):
-   #         edges = cv2.Canny(df[i, j, :, :, 0], 100, 100)
-    #        df[i,j,:,:,0] = edges
-#
- #   return df
+def canny_filter(df):
+    df = df.astype(np.uint8)
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            edges = cv2.Canny(df[i, j, :, :, :], df.shape[2], df.shape[3])
+            df[i, j, :, :, 0] = edges
+
+    return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop = 25):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop=25,
+                  filter='edge'):
     df = list_to_array(x_data, max_time)
-
+    plot(df)
     if cut_time:
         df = cut_time_steps(df, length)
+        plot(df)
     if normalizing:
         df = normalize(df)
+        plot(df)
     if scaling:
         df = scale(df, resolution)
+        plot(df)
+    if filter == 'edge':
+        df = edge_filter(df, sigma=1)
+        plot(df)
+    elif filter == 'canny':
+        df = canny_filter(df)
+        plot(df)
+    elif filter == 'finder':
+        df = finderContour(df)
+    else:
+        pass
 
-    df = edge_filter(df, sigma=1)
     df = cropping(df, left=crop, right=crop, up=crop, down=crop)
-
+    plot(df)
 
     try:
         file = retrieve_name(x_data)
