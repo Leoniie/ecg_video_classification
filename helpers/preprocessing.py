@@ -87,6 +87,15 @@ def cut_time_steps(x, length):
     print("Length Cut")
     return x
 
+def blur_filtering(df, kernel_size = 5):
+    df = df.astype(np.uint8)
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            blur = cv2.GaussianBlur(df[i, j, :, :, 0], (kernel_size,kernel_size),0)
+            df[i, j, :, :, 0] = blur
+
+    return df
+
 
 def gaussian_filtering(df, sigma):
     # input: array x of size (n_samples, n_timesteps, height, width,1)
@@ -162,9 +171,9 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
     if scaling:
         df = scale(df, resolution)
         plot(df)
-    df = cropping(df, left=20, right=0, up=0, down=20)
+    df = cropping(df, left=30, right=0, up=0, down=30)
     plot(df)
-    df = cv2.GaussianBlur(df, (5,5),0)
+    df = blur_filtering(df,3)
     plot(df)
     if filter == 'edge':
         df = edge_filter(df, sigma=1)
@@ -173,7 +182,7 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
         df = canny_filter(df)
         plot(df)
     elif filter == 'finder':
-        df = finderContour(df)
+        df = finderContour(df, tresh_min = 3)
     else:
         pass
 
