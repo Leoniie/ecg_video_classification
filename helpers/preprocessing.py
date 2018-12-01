@@ -105,7 +105,8 @@ def finderContour(df, tresh_min=5, tresh_max=255):
             img = cv2.convertScaleAbs(df[i, j, :, :, 0])
             (thresh, im_bw) = cv2.threshold(img, tresh_min, tresh_max, 0)
             im2, contours, hierarchy = cv2.findContours(im_bw, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            img = cv2.drawContours(img, contours, -1, 255, 1)
+            drawing = np.zeros((img.shape[0], img.shape[1]), np.uint8)
+            img = cv2.drawContours(drawing, contours, -1, 255, 1)
             df[i, j, :, :, 0] = img
 
     return df
