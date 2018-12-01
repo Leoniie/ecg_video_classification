@@ -24,6 +24,8 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(128, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
+    model.add(Conv3D(256, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     #model.add(Reshape(target_shape=(nb_steps, -1)))
     #model.add(Conv1D(16, kernel_size=3, activation='relu'))
     #model.add(MaxPooling1D())
@@ -34,7 +36,7 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     #model.add(Conv1D(128, kernel_size=3,  activation='relu'))
     #model.add(MaxPooling1D())
     model.add(Flatten())
-    model.add(Dense(200, activation='relu', name='first_dense'))
+    model.add(Dense(2000, activation='relu', name='first_dense'))
     model.add(Dropout(0.5))
     model.add(Dense(32, activation="relu", name="second_dense"))
     model.add(Dropout(0.4))
@@ -50,10 +52,10 @@ def evaluate_sequential(X, y, x_test):
     # Hyperparameter!
 
     #filter = 32 disabled
-    patience = 1
-    batch_size = 1
-    epochs = 40
-    kernel_size = 5
+    patience = 20
+    batch_size = 4
+    epochs = 200
+    kernel_size = 3
     print("Shape before Model: ", X.shape)
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
