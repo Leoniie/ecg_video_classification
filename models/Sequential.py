@@ -1,5 +1,3 @@
-# TODO: fix the error, maybe it's something with the input shape?
-#Malte
 from datetime import datetime
 import numpy as np
 
