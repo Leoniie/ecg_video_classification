@@ -150,8 +150,7 @@ def canny_filter(df):
     return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop=25,
-                  filter='edge'):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop=25, filter='finder'):
     df = list_to_array(x_data, max_time)
     plot(df)
     if cut_time:
@@ -163,6 +162,10 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
     if scaling:
         df = scale(df, resolution)
         plot(df)
+    df = cropping(df, left=20, right=0, up=0, down=20)
+    plot(df)
+    df = cv2.GaussianBlur(df, (5,5),0)
+    plot(df)
     if filter == 'edge':
         df = edge_filter(df, sigma=1)
         plot(df)
@@ -174,8 +177,7 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
     else:
         pass
 
-    df = cropping(df, left=crop, right=crop, up=crop, down=crop)
-    plot(df)
+
 
     try:
         file = retrieve_name(x_data)
