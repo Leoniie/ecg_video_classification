@@ -7,6 +7,7 @@ from keras.layers import Dense, Dropout
 from keras.models import Sequential
 from helpers.plotter import plot
 from helpers.metrics import confusion_metric_vis
+from keras import regularizers
 
 
 def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kernel_size):
@@ -20,12 +21,12 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     model.add(Conv3D(20, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(40, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
+    model.add(Conv3D(40, kernel_size, strides=(1,1,1), activation='relu', padding='same', kernel_regularizer=regularizers.l2(0.01)))
     model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(40, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(80, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
+    #model.add(Conv3D(40, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
+    #model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
+    #model.add(Conv3D(80, kernel_size, strides=(1,1,1), activation='relu', padding='same'))
+    #model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     #model.add(Reshape(target_shape=(nb_steps, -1)))
     #model.add(Conv1D(16, kernel_size=3, activation='relu'))
     #model.add(MaxPooling1D())
@@ -36,11 +37,11 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     #model.add(Conv1D(128, kernel_size=3,  activation='relu'))
     #model.add(MaxPooling1D())
     model.add(Flatten())
-    model.add(Dense(64, activation='relu', name='first_dense'))
+    model.add(Dense(128, activation='relu', name='first_dense', kernel_regularizer=regularizers.l2(0.001)))
     model.add(Dropout(0.5))
-    model.add(Dense(32, activation="relu", name="second_dense"))
+    model.add(Dense(32, activation="relu", name="second_dense", kernel_regularizer=regularizers.l2(0.01)))
     model.add(Dropout(0.4))
-    model.add(Dense(1, activation='softmax', name="last_dense"))
+    model.add(Dense(1, activation='sigmoid', name="last_dense"))
     model.compile(optimizer='adagrad',
                   loss='binary_crossentropy',
                   metrics=['accuracy'])  # ,final_metric
