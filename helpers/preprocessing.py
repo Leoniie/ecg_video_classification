@@ -7,6 +7,8 @@ import scipy.ndimage
 import pylab as pyl
 import cv2
 from matplotlib import pyplot as plt
+from skvideo.io import vwrite
+
 from helpers.plotter import plot
 
 
@@ -153,7 +155,7 @@ def canny_filter(df):
     df = df.astype(np.uint8)
     for i in range(df.shape[0]):
         for j in range(df.shape[1]):
-            edges = cv2.Canny(df[i, j, :, :, :], df.shape[2], df.shape[3])
+            edges = cv2.Canny(df[i, j, :, :, :], 50, 50)
             df[i, j, :, :, 0] = edges
 
     return df
@@ -171,8 +173,6 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
     if scaling:
         df = scale(df, resolution)
         plot(df)
-    df = cropping(df, left=30, right=0, up=0, down=30)
-    plot(df)
     df = blur_filtering(df,3)
     plot(df)
     if filter == 'edge':
@@ -182,15 +182,20 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
         df = canny_filter(df)
         plot(df)
     elif filter == 'finder':
-        df = finderContour(df, tresh_min = 3)
+        df = finderContour(df, tresh_min = 10)
     else:
         pass
+    df = cropping(df, left=2, right=2, up=2, down=2)
+    plot(df)
+    file = retrieve_name(x_data)
 
+    if not os.path.exists("data/filtered/"):
+        os.makedirs("data/filtered/")
 
+    for i in range(df.shape[0]):
+        vwrite("data/filtered/filtered_" + str(file) + "_" + str(i) +".avi", df[i,:,:,:,:])
 
     try:
-        file = retrieve_name(x_data)
-        print(file)
         path = 'data/numpy/' + str(file)
         path = os.path.abspath(path)
         np.save(path, df)

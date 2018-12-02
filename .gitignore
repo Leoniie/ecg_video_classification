@@ -115,4 +115,5 @@ output
 
 # data
 data/numpy
+data/filtered
 .DS_Store
