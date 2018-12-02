@@ -52,10 +52,10 @@ def evaluate_sequential(X, y, x_test):
     # Hyperparameter!
 
     #filter = 32 disabled
-    patience = 20
-    batch_size = 4
+    patience = 10
+    batch_size = 32
     epochs = 200
-    kernel_size = 3
+    kernel_size = 5
     print("Shape before Model: ", X.shape)
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
