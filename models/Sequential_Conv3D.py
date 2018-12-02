@@ -54,7 +54,7 @@ def evaluate_sequential(X, y, x_test):
 
     #filter = 32 disabled
     patience = 10
-    batch_size = 32
+    batch_size = 1
     epochs = 200
     kernel_size = 5
     print("Shape before Model: ", X.shape)
