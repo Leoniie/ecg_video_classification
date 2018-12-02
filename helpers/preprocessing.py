@@ -159,7 +159,7 @@ def canny_filter(df):
     return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop=25, filter='finder'):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1, cut_time=True, length=100, crop=25, filter='finder'):
     df = list_to_array(x_data, max_time)
     plot(df)
     if cut_time:
