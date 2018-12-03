@@ -67,3 +67,48 @@ def outputter(array):
                   mode='w', encoding=None, compression=None,
                   quoting=None, quotechar='"', line_terminator='\n', chunksize=None, tupleize_cols=None,
                   date_format=None, doublequote=True, escapechar=None, decimal='.')
+
+def outputter2(array):
+        y = pd.DataFrame(array, dtype=np.dtype('U25'))
+        ids = list(range(0, y.shape[0]))
+        ids = pd.DataFrame(ids)
+        output = pd.concat([ids, y], axis=1)
+        output.columns = ["id", "y"]
+
+        cwd = os.getcwd()
+        date = datetime.date(datetime.now())
+        time = datetime.time(datetime.now())
+        s = "_"
+        seq = (str(date), str(time.strftime('%H_%M_%S')), "solution.csv")
+        file_name = s.join(seq)  # type: str
+        path = cwd + "/x_train_new/" + file_name
+        path = os.path.abspath(path)
+        print(path)
+        output.to_csv(path_or_buf=path, sep=',', na_rep='', float_format='U25',
+                      header=True, index=False,
+                      mode='w', encoding=None, compression=None,
+                      quoting=None, quotechar='"', line_terminator='\n', chunksize=None, tupleize_cols=None,
+                      date_format=None, doublequote=True, escapechar=None, decimal='.')
+
+
+def outputter3(array):
+    y = pd.DataFrame(array, dtype=np.dtype('U25'))
+    ids = list(range(0, y.shape[0]))
+    ids = pd.DataFrame(ids)
+    output = pd.concat([ids, y], axis=1)
+    output.columns = ["id", "y"]
+
+    cwd = os.getcwd()
+    date = datetime.date(datetime.now())
+    time = datetime.time(datetime.now())
+    s = "_"
+    seq = (str(date), str(time.strftime('%H_%M_%S')), "solution.csv")
+    file_name = s.join(seq)  # type: str
+    path = cwd + "/x_test_new/" + file_name
+    path = os.path.abspath(path)
+    print(path)
+    output.to_csv(path_or_buf=path, sep=',', na_rep='', float_format='U25',
+                  header=True, index=False,
+                  mode='w', encoding=None, compression=None,
+                  quoting=None, quotechar='"', line_terminator='\n', chunksize=None, tupleize_cols=None,
+                  date_format=None, doublequote=True, escapechar=None, decimal='.')

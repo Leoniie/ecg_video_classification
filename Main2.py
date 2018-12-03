@@ -3,7 +3,7 @@
 import numpy as np
 import os
 
-from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
+from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter, outputter2, outputter3
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
 
 from models.Sequential_Conv3D import evaluate_sequential
@@ -64,7 +64,8 @@ else:
 x_train_en = evaluate_auto(x_train)
 x_test_en = evaluate_auto(x_test)
 
-
+outputter2(x_train_en)
+outputter3(x_test_en)
 y = evaluate_sequential(x_train_en,
                         y_train,
                         x_test_en)

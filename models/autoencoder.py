@@ -55,7 +55,7 @@ def evaluate_auto(X):
     print(model.summary())
 
 
-    earlystop = EarlyStopping(monitor='val_accuracy', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_acc', min_delta=0.0, patience=patience, verbose=2,
                               mode='auto')
     time_before = datetime.now()
     model.fit(X, X,
