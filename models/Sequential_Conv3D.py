@@ -63,7 +63,7 @@ def evaluate_sequential(X, y, x_test):
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 
-    plot(X)
+    #plot(X)
     model = build_sequential(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height,
                              filter=filter, input_channels=input_channels)  # , Neurons = Neurons
     # print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
