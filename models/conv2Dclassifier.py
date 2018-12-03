@@ -20,18 +20,20 @@ def to2D(x_train,y_train,x_test):
     batch_size = 16
 
 
+
     input_shape = (img_width, img_height, 1)
 
     model = Sequential()
-    model.add(Conv2D(32, (3, 3), input_shape=input_shape))
+    model.add(Conv2D(32, (10, 10), input_shape=input_shape))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(32, (3, 3)))
+    model.add(Conv2D(32, (10, 10)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
-    model.add(Conv2D(64, (3, 3)))
+
+    model.add(Conv2D(64, (10, 10)))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -42,11 +44,16 @@ def to2D(x_train,y_train,x_test):
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
+
+
+
+
+
     model.compile(loss='binary_crossentropy',
                   optimizer='rmsprop',
                   metrics=['accuracy'])
 
-    model.fit(x_train, y_train,epochs=epochs, batch_size=batch_size, validation_split=0.3, shuffle=True)
+    model.fit(x_train, y_train,epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True)
 
 
     y_test = model.predict(x_test)
