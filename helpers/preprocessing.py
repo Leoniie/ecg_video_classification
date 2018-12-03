@@ -98,7 +98,7 @@ def blur_filtering(df, kernel_size = 5):
 
     return df
 
-def binary(df,thresh):
+def binarize(df,thresh):
 
     for i in range(df.shape[0]):
         for t in range(df.shape[1]):
@@ -109,9 +109,9 @@ def binary(df,thresh):
             for k in range(a.shape[0]):
                 for l in range(a.shape[1]):
                     if (d[k, l] > thresh * d.mean()):
-                        a[i, j] = 1
+                        a[k, l] = 1
                     else:
-                        a[i, j] = 0
+                        a[k, l] = 0
             df[i,t,:,:,0]=a
 
     return df
@@ -204,8 +204,10 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1
         pass
     df = cropping(df, left=2, right=2, up=2, down=2)
 
-    if binary:
-        df = binary(df)
+
+    if binary==True:
+        df = binarize(df,thresh=2)
+
 
    # plot(df)
     file = retrieve_name(x_data)

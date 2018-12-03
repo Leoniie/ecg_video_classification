@@ -4,6 +4,7 @@ import numpy as np
 
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
+from models.conv2Dclassifier import to2D
 
 from models.Sequential_Conv3D import evaluate_sequential
 
@@ -67,3 +68,37 @@ else:
                        # x_test)
 
 #outputter(y)
+
+#idee: alle
+a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
+b = np.zeros((158 * x_train.shape[1]))
+for i in range(x_train.shape[0]):
+    for j in range(x_train.shape[1]):
+        index = x_train.shape[1] * i + j
+        a_train[index, :, :,0] = x_train[i, j, :, :, 0]
+        b[index] = y_train[i]
+
+
+a_test = np.zeros((x_test.shape[0] * x_test.shape[1], x_test.shape[2], x_test.shape[3],1))
+
+for i in range(x_test.shape[0]):
+    for j in range(x_test.shape[1]):
+        index = x_test.shape[1] * i + j
+        a_test[index, :, :,0] = x_test[i, j, :, :, 0]
+
+
+b_test = to2D(a_train,b,a_test)
+q = np.zeros((69))
+
+b_test = np.round(b_test)
+
+n_images = x_test.shape[1]
+
+for i in range(69):
+    for j in range(n_images):
+        q[i] += b_test[i*n_images+j]
+
+q = q/n_images
+q = np.round(q)
+
+outputter(q)
