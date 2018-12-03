@@ -2,7 +2,7 @@ from datetime import datetime
 from keras.models import Model
 import numpy as np
 from keras.callbacks import EarlyStopping
-from keras.layers import Conv3D, MaxPooling3D, Flatten, Conv1D, MaxPooling1D, Reshape, UpSampling3D
+from keras.layers import Conv2D, MaxPooling3D, Flatten, Conv1D, MaxPooling1D, Reshape, UpSampling3D
 from keras.layers import Dense, Dropout, Input, Embedding
 from keras.models import Sequential
 from helpers.plotter import plot
@@ -10,23 +10,24 @@ from helpers.metrics import confusion_metric_vis
 from keras import regularizers
 
 
-def build_encoder(nb_steps, nb_width, nb_height, input_channels, kernel_size):
+def build_encoder(img_width, img_height):
     # define CNN model
-    input_layer = Input(shape=(nb_steps, nb_width, nb_height, input_channels))
+
+    input_layer = Input(shape=(img_width, img_height, 1))
     # Encoder
-    en1 = Conv3D(16, kernel_size, activation='relu', padding='same')(input_layer)
+    en1 = Conv2D(16, kernel_size, activation='relu', padding='same')(input_layer)
     max1 = MaxPooling3D(pool_size=(2, 2, 2)) (en1)
-    en2 = Conv3D(8, kernel_size, activation='relu', padding='same') (max1)
+    en2 = Conv2D(8, kernel_size, activation='relu', padding='same') (max1)
     max2 = MaxPooling3D(pool_size=(2, 2, 2)) (en2)
 
     #Decoder
 
-    de1 = Conv3D(8, kernel_size, activation='relu', padding='same') (max2)
+    de1 = Conv2D(8, kernel_size, activation='relu', padding='same') (max2)
     Up1 = UpSampling3D(size=(2,2,2)) (de1)
-    de2 = Conv3D(16, kernel_size, activation='relu', padding='same') (Up1)
+    de2 = Conv2D(16, kernel_size, activation='relu', padding='same') (Up1)
     Up2 = UpSampling3D(size=(2,2,2)) (de2)
 
-    Out_dec = Conv3D(1, (3,3,3), strides=(1,1,1), activation='sigmoid', padding='same') (Up2)
+    Out_dec = Conv2D(1, (3,3,3), strides=(1,1,1), activation='sigmoid', padding='same') (Up2)
 
     autoencoder = Model(input_layer, Out_dec)
     autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy', metrics=['accuracy'])
@@ -44,12 +45,10 @@ def evaluate_auto(X):
     epochs = 20
     kernel_size = 5
     print("Shape before Model: ", X.shape)
-    nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
-    print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
+    img_width, img_height = X.shape[1], X.shape[2]
 
 
-    model, encode = build_encoder(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height,
-                          input_channels=input_channels)  # , Neurons = Neurons
+    model, encode = build_encoder(img_width=img_width, img_height=img_height)  # , Neurons = Neurons
     # print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
 
     print(model.summary())

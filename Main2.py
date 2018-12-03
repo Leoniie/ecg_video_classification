@@ -2,7 +2,7 @@
 
 import numpy as np
 import os
-
+from models.conv2Dclassifier import to2D
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter, outputter2, outputter3
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
 
@@ -64,10 +64,36 @@ else:
 x_train_en = evaluate_auto(x_train)
 x_test_en = evaluate_auto(x_test)
 
-outputter2(x_train_en)
-outputter3(x_test_en)
-y = evaluate_sequential(x_train_en,
-                        y_train,
-                        x_test_en)
+a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
+b = np.zeros((158 * x_train.shape[1]))
+for i in range(x_train.shape[0]):
+    for j in range(x_train.shape[1]):
+        index = x_train.shape[1] * i + j
+        a_train[index, :, :,0] = x_train[i, j, :, :, 0]
+        b[index] = y_train[i]
 
-outputter(y)
+
+a_test = np.zeros((x_test.shape[0] * x_test.shape[1], x_test.shape[2], x_test.shape[3],1))
+
+for i in range(x_test.shape[0]):
+    for j in range(x_test.shape[1]):
+        index = x_test.shape[1] * i + j
+        a_test[index, :, :,0] = x_test[i, j, :, :, 0]
+
+a_train = evaluate_auto(a_train)
+a_test = evaluate_auto(a_test)
+b_test = to2D(a_train,b,a_test)
+q = np.zeros((69))
+
+b_test = np.round(b_test)
+
+n_images = x_test.shape[1]
+
+for i in range(69):
+    for j in range(n_images):
+        q[i] += b_test[i*n_images+j]
+
+q = q/n_images
+q = np.round(q)
+
+outputter(q)
