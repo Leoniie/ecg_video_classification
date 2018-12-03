@@ -42,7 +42,7 @@ def evaluate_auto(X, X_train, X_test):
     #filter = 32 disabled
     patience = 10
     batch_size = 32
-    epochs = 20
+    epochs = 5
     kernel_size = 5
     print("Shape before Model: ", X.shape)
     img_width, img_height = X.shape[1], X.shape[2]

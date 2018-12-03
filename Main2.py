@@ -1,5 +1,5 @@
 
-
+from sklearn.svm import SVC
 import numpy as np
 import os
 from models.conv2Dclassifier import to2D
@@ -81,8 +81,13 @@ for i in range(x_test.shape[0]):
 
 X = concatenate((a_train,a_test), axis=0)
 a_train, a_test = evaluate_auto(X,a_train, a_test)
-a_test = evaluate_auto(a_test)
+
 b_test = to2D(a_train,b,a_test)
+
+
+
+
+
 q = np.zeros((69))
 
 b_test = np.round(b_test)
