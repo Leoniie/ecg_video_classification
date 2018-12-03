@@ -5,7 +5,7 @@ import numpy as np
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
 from models.conv2Dclassifier import to2D
-
+from models.conv2Dclassifier_cv import Wrapper
 from models.Sequential_Conv3D import evaluate_sequential
 
 # from helpers.output import output_generator
@@ -87,7 +87,7 @@ for i in range(x_test.shape[0]):
         a_test[index, :, :,0] = x_test[i, j, :, :, 0]
 
 
-b_test = to2D(a_train,b,a_test)
+b_test = Wrapper(a_train,b,a_test)
 q = np.zeros((69))
 
 b_test = np.round(b_test)
