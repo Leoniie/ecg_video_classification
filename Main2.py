@@ -1,12 +1,13 @@
-import os
+
 
 import numpy as np
+import os
 
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
-from models.conv2Dclassifier import to2D
 
 from models.Sequential_Conv3D import evaluate_sequential
+from models.autoencoder import evaluate_auto
 
 # from helpers.output import output_generator
 
@@ -14,7 +15,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
 RESOLUTION = 1.0
 
@@ -47,11 +48,9 @@ if PREPROCESSING:
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-
-                            scaling=True, resolution=RESOLUTION, cut_time=True, length = min_time_steps-10, crop=0, filter='canny')
+                            scaling=True, resolution=RESOLUTION, cut_time=True, length = 20, crop=0, filter=False)
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=True, resolution=RESOLUTION, cut_time=True, length= min_time_steps-10, crop=0, filter='canny')
-
+                           scaling=True, resolution=RESOLUTION, cut_time=True, length= 20, crop=0, filter=False)
 
 else:
 
@@ -62,31 +61,12 @@ else:
     x_test = np.load('data/numpy/x_test.npy')
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
-
-#y = evaluate_sequential(x_train,
-                    #    y_train,
-                       # x_test)
-
-#outputter(y)
+x_train_en = evaluate_auto(x_train)
+x_test_en = evaluate_auto(x_test)
 
 
-a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
-b = np.zeros((158 * x_train.shape[1]))
-for i in range(x_train.shape[0]):
-    for j in range(x_train.shape[1]):
-        index = x_train.shape[1] * i + j
-        a_train[index, :, :,0] = x_train[i, j, :, :, 0]
-        b[index] = y_train[i]
+y = evaluate_sequential(x_train_en,
+                        y_train,
+                        x_test_en)
 
-
-a_test = np.zeros((x_test.shape[0] * x_test.shape[1], x_test.shape[2], x_test.shape[3],1))
-
-for i in range(x_test.shape[0]):
-    for j in range(x_test.shape[1]):
-        index = x_test.shape[1] * i + j
-        a_test[index, :, :,0] = x_test[i, j, :, :, 0]
-
-
-a_test = to2D(a_train,b,a_test)
-
-outputter(a_test)
+outputter(y)
