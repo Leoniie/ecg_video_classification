@@ -48,9 +48,9 @@ if PREPROCESSING:
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-                            scaling=True, resolution=RESOLUTION, cut_time=True, length = 12, crop=0, filter=False, binary=True)
+                            scaling=True, resolution=RESOLUTION, cut_time=True, length = 8, crop=0, filter=False, binary=True)
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=True, resolution=RESOLUTION, cut_time=True, length= 12, crop=0, filter=False, binary=True)
+                           scaling=True, resolution=RESOLUTION, cut_time=True, length= 8, crop=0, filter=False, binary=True)
 
 else:
 
