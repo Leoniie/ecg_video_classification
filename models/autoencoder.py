@@ -2,7 +2,7 @@ from datetime import datetime
 from keras.models import Model
 import numpy as np
 from keras.callbacks import EarlyStopping
-from keras.layers import Conv2D, MaxPooling3D, Flatten, Conv1D, MaxPooling1D, Reshape, UpSampling3D
+from keras.layers import Conv2D, MaxPooling2D, Flatten, Conv1D, MaxPooling1D, Reshape, UpSampling2D
 from keras.layers import Dense, Dropout, Input, Embedding
 from keras.models import Sequential
 from helpers.plotter import plot
@@ -15,22 +15,22 @@ def build_encoder(img_width, img_height):
 
     input_layer = Input(shape=(img_width, img_height, 1))
     # Encoder
-    en1 = Conv2D(16, kernel_size, activation='relu', padding='same')(input_layer)
-    max1 = MaxPooling3D(pool_size=(2, 2, 2)) (en1)
-    en2 = Conv2D(8, kernel_size, activation='relu', padding='same') (max1)
-    max2 = MaxPooling3D(pool_size=(2, 2, 2)) (en2)
+    en1 = Conv2D(16, (10, 10), activation='relu', padding='same')(input_layer)
+    max1 = MaxPooling2D(pool_size=(2, 2)) (en1)
+    en2 = Conv2D(8, (10, 10), activation='relu', padding='same') (max1)
+    max2 = MaxPooling2D(pool_size=(2, 2)) (en2)
 
     #Decoder
 
-    de1 = Conv2D(8, kernel_size, activation='relu', padding='same') (max2)
-    Up1 = UpSampling3D(size=(2,2,2)) (de1)
-    de2 = Conv2D(16, kernel_size, activation='relu', padding='same') (Up1)
-    Up2 = UpSampling3D(size=(2,2,2)) (de2)
+    de1 = Conv2D(8, (10, 10), activation='relu', padding='same') (max2)
+    Up1 = UpSampling2D(size=(2,2)) (de1)
+    de2 = Conv2D(16, (10, 10), activation='relu', padding='same') (Up1)
+    Up2 = UpSampling2D(size=(2,2)) (de2)
 
-    Out_dec = Conv2D(1, (3,3,3), strides=(1,1,1), activation='sigmoid', padding='same') (Up2)
+    Out_dec = Conv2D(1, (3,3), activation='sigmoid', padding='same') (Up2)
 
     autoencoder = Model(input_layer, Out_dec)
-    autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy', metrics=['accuracy'])
+    autoencoder.compile(optimizer='rmsprop', loss='binary_crossentropy', metrics=['accuracy'])
     encode = Model(input_layer, max2)
 
     return autoencoder, encode

@@ -15,7 +15,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = True
+PREPROCESSING = False
 # Preprocessing parameter
 RESOLUTION = 1.0
 
@@ -61,8 +61,7 @@ else:
     x_test = np.load('data/numpy/x_test.npy')
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
-x_train_en = evaluate_auto(x_train)
-x_test_en = evaluate_auto(x_test)
+
 
 a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
 b = np.zeros((158 * x_train.shape[1]))
