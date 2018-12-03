@@ -29,9 +29,9 @@ def to2D(x_train,y_train,x_test):
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
-    model.add(Conv2D(32, (3, 3)), kernel_regularizer=regularizers.l2(0.01))
+    model.add(Conv2D(32, (3, 3), kernel_regularizer=regularizers.l2(0.01)) )
     model.add(Activation('relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)), kernel_regularizer=regularizers.l2(0.01))
+    model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
     model.add(Conv2D(64, (10, 10)))
@@ -39,7 +39,7 @@ def to2D(x_train,y_train,x_test):
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Flatten())
-    model.add(Dense(64), kernel_regularizer=regularizers.l2(0.05))
+    model.add(Dense(64,  kernel_regularizer=regularizers.l2(0.01)))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(1))
