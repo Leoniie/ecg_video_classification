@@ -204,8 +204,10 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1
         pass
     df = cropping(df, left=2, right=2, up=2, down=2)
 
+
     if binary==True:
         df = binarize(df,thresh=2.5)
+
 
    # plot(df)
     file = retrieve_name(x_data)
