@@ -14,11 +14,11 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     # define CNN model
     model = Sequential()
     # Cropping upper half and quarter left quarter right
-    model.add(Conv3D(32, kernel_size, strides=(1,1,1), activation='relu', padding='same', data_format='channels_last',
+    model.add(Conv3D(16, kernel_size, strides=(2,2,2), activation='relu', padding='same', data_format='channels_last',
                      input_shape=(nb_steps, nb_width, nb_height, input_channels)))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
-    model.add(Conv3D(32, kernel_size, strides=(2,2,2), activation='relu', padding='same',kernel_regularizer=regularizers.l2(0.01)))
-    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2,2,2)))
+    model.add(Conv3D(16, kernel_size, strides=(2,2,2), activation='relu', padding='same',kernel_regularizer=regularizers.l2(0.01)))
+    model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(2,2,2)))
     #model.add(Conv3D(64, kernel_size, strides=(2,2,2), activation='relu', padding='same', kernel_regularizer=regularizers.l2(0.01)))
     #model.add(MaxPooling3D(pool_size=(2, 2, 2), strides=(1,2,2)))
     #model.add(Conv3D(64, kernel_size, strides=(2,2,2), activation='relu', padding='same', kernel_regularizer=regularizers.l2(0.01)))

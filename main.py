@@ -13,7 +13,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = True
+PREPROCESSING = False
 # Preprocessing parameter
 RESOLUTION = 0.5
 
