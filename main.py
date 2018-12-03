@@ -4,6 +4,7 @@ import numpy as np
 
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
+from models.conv2Dclassifier import to2D
 
 from models.Sequential_Conv3D import evaluate_sequential
 
@@ -13,7 +14,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = True
+PREPROCESSING = False
 # Preprocessing parameter
 RESOLUTION = 1.0
 
@@ -65,3 +66,25 @@ else:
                        # x_test)
 
 #outputter(y)
+
+
+a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
+b = np.zeros((158 * x_train.shape[1]))
+for i in range(x_train.shape[0]):
+    for j in range(x_train.shape[1]):
+        index = x_train.shape[1] * i + j
+        a_train[index, :, :,0] = x_train[i, j, :, :, 0]
+        b[index] = y_train[i]
+
+
+a_test = np.zeros((x_test.shape[0] * x_test.shape[1], x_test.shape[2], x_test.shape[3],1))
+
+for i in range(x_test.shape[0]):
+    for j in range(x_test.shape[1]):
+        index = x_test.shape[1] * i + j
+        a_test[index, :, :,0] = x_test[i, j, :, :, 0]
+
+
+a_test = to2D(a_train,b,a_test)
+
+outputter(a_test)
