@@ -13,7 +13,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
 RESOLUTION = 1.0
 
@@ -46,9 +46,9 @@ if PREPROCESSING:
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
-                            scaling=True, resolution=RESOLUTION, cut_time=True, length = min_time_steps, crop=0, filter='canny')
+                            scaling=True, resolution=RESOLUTION, cut_time=True, length = min_time_steps, crop=0, filter='no',binary=True)
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=True, resolution=RESOLUTION, cut_time=True, length= min_time_steps, crop=0, filter='canny')
+                           scaling=True, resolution=RESOLUTION, cut_time=True, length= min_time_steps, crop=0, filter='no',binary=True)
 
 else:
 
@@ -60,8 +60,8 @@ else:
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
 
-y = evaluate_sequential(x_train,
-                        y_train,
-                        x_test)
+#y = evaluate_sequential(x_train,
+                    #    y_train,
+                       # x_test)
 
-outputter(y)
+#outputter(y)
