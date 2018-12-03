@@ -204,7 +204,7 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1
         pass
     df = cropping(df, left=2, right=2, up=2, down=2)
 
-    if (binary):
+    if binary:
         df = binary(df)
 
    # plot(df)
