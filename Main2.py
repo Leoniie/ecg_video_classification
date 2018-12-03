@@ -5,7 +5,7 @@ import os
 from models.conv2Dclassifier import to2D
 from helpers.io import inputter_csv_file, inputter_videos_from_folder, outputter, outputter2, outputter3
 from helpers.preprocessing import preprocessing, max_time, cropping, gaussian_filtering, edge_filter, min_time
-
+from numpy import concatenate
 from models.Sequential_Conv3D import evaluate_sequential
 from models.autoencoder import evaluate_auto
 
@@ -79,7 +79,8 @@ for i in range(x_test.shape[0]):
         index = x_test.shape[1] * i + j
         a_test[index, :, :,0] = x_test[i, j, :, :, 0]
 
-a_train = evaluate_auto(a_train)
+X = concatenate((a_train,a_test), axis=0)
+a_train, a_test = evaluate_auto(X,a_train, a_test)
 a_test = evaluate_auto(a_test)
 b_test = to2D(a_train,b,a_test)
 q = np.zeros((69))

@@ -36,7 +36,7 @@ def build_encoder(img_width, img_height):
     return autoencoder, encode
 
 
-def evaluate_auto(X):
+def evaluate_auto(X, X_train, X_test):
     # Hyperparameter!
 
     #filter = 32 disabled
@@ -63,5 +63,6 @@ def evaluate_auto(X):
 
     print("fitting took {} seconds".format(time_after - time_before))
 
-    x_en = encode.predict(X)
-    return x_en
+    x_en = encode.predict(X_train)
+    x_test_en = encode.predict(X_test)
+    return x_en, x_test_en
