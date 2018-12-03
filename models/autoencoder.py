@@ -29,7 +29,7 @@ def build_encoder(nb_steps, nb_width, nb_height, input_channels, kernel_size):
     Out_dec = Conv3D(1, (3,3,3), strides=(1,1,1), activation='sigmoid', padding='same') (Up2)
 
     autoencoder = Model(input_layer, Out_dec)
-    autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy')
+    autoencoder.compile(optimizer='adadelta', loss='binary_crossentropy', metrics=['accuracy'])
     encode = Model(input_layer, max2)
 
     return autoencoder, encode
@@ -47,7 +47,7 @@ def evaluate_auto(X):
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
 
-    plot(X)
+
     model, encode = build_encoder(kernel_size=kernel_size, nb_steps=nb_steps, nb_width=nb_width, nb_height=nb_height,
                           input_channels=input_channels)  # , Neurons = Neurons
     # print('\nModel with input size {}, output size {}, {} conv filters of length {}'.format(model.input_shape))
@@ -55,7 +55,7 @@ def evaluate_auto(X):
     print(model.summary())
 
 
-    earlystop = EarlyStopping(monitor='val_loss', min_delta=0.0, patience=patience, verbose=2,
+    earlystop = EarlyStopping(monitor='val_accuracy', min_delta=0.0, patience=patience, verbose=2,
                               mode='auto')
     time_before = datetime.now()
     model.fit(X, X,
