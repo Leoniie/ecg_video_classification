@@ -61,9 +61,9 @@ def list_to_array(x_data, maxtime):
 
     x_array = x_array[:, :, :, :, np.newaxis]
 
-    plt.hist(min_list, normed=True, bins=30)
-    plt.ylabel('Frequency')
-    plt.show()
+    #plt.hist(min_list, normed=True, bins=30)
+    #plt.ylabel('Frequency')
+    #plt.show()
 
     return x_array
 

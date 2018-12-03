@@ -16,7 +16,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 
 PREPROCESSING = False
 # Preprocessing parameter
-RESOLUTION = 1.0
+RESOLUTION = 0.5
 
 
 
