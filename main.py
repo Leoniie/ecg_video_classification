@@ -14,7 +14,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
-PREPROCESSING = False
+PREPROCESSING = True
 # Preprocessing parameter
 RESOLUTION = 1.0
 
@@ -69,7 +69,7 @@ else:
 
 #outputter(y)
 
-
+#idee: alle
 a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
 b = np.zeros((158 * x_train.shape[1]))
 for i in range(x_train.shape[0]):
@@ -87,6 +87,18 @@ for i in range(x_test.shape[0]):
         a_test[index, :, :,0] = x_test[i, j, :, :, 0]
 
 
-a_test = to2D(a_train,b,a_test)
+b_test = to2D(a_train,b,a_test)
+q = np.zeros((69))
 
-outputter(a_test)
+b_test = np.round(b_test)
+
+n_images = x_test.shape[1]
+
+for i in range(69):
+    for j in range(n_images):
+        q[i] += b_test[i*n_images+j]
+
+q = q/n_images
+q = np.round(q)
+
+outputter(q)

@@ -8,7 +8,6 @@ from keras import backend as K
 def to2D(x_train,y_train,x_test):
 
 
-        #flatten array
 
 
 
@@ -17,7 +16,7 @@ def to2D(x_train,y_train,x_test):
 
     nb_train_samples = x_train.shape[0]
     nb_validation_samples = x_test.shape[0]
-    epochs = 50
+    epochs = 10
     batch_size = 16
 
 
@@ -47,7 +46,7 @@ def to2D(x_train,y_train,x_test):
                   optimizer='rmsprop',
                   metrics=['accuracy'])
 
-    model.fit(x_train, y_train,epochs=epochs, batch_size=batch_size, validation_split=0.2, shuffle=True)
+    model.fit(x_train, y_train,epochs=epochs, batch_size=batch_size, validation_split=0.3, shuffle=True)
 
 
     y_test = model.predict(x_test)
