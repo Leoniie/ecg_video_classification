@@ -206,7 +206,7 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1
 
 
     if binary==True:
-        df = binarize(df,thresh=2)
+        df = binarize(df,thresh=2.5)
 
 
    # plot(df)
