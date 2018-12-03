@@ -98,6 +98,23 @@ def blur_filtering(df, kernel_size = 5):
 
     return df
 
+def binary(df,thresh):
+
+    for i in range(df.shape[0]):
+        for t in range(df.shape[1]):
+            a = np.zeros((df.shape[2],df.shape[3]))
+            d = df[i,t,:,:,0]
+            d = d / d.max()
+
+            for k in range(a.shape[0]):
+                for l in range(a.shape[1]):
+                    if (d[k, l] > thresh * d.mean()):
+                        a[i, j] = 1
+                    else:
+                        a[i, j] = 0
+            df[i,t,:,:,0]=a
+
+    return df
 
 def gaussian_filtering(df, sigma):
     # input: array x of size (n_samples, n_timesteps, height, width,1)
@@ -161,32 +178,36 @@ def canny_filter(df):
     return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1, cut_time=True, length=100, crop=25, filter='finder'):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1, cut_time=True, length=100, crop=25, filter='no',binary=True):
     df = list_to_array(x_data, max_time)
-    plot(df)
+    #plot(df)
     if cut_time:
         df = cut_time_steps(df, length)
-        plot(df)
+       # plot(df)
     if normalizing:
         df = normalize(df)
-        plot(df)
+        #plot(df)
     if scaling:
         df = scale(df, resolution)
-        plot(df)
+       # plot(df)
     df = blur_filtering(df,3)
-    plot(df)
+    #plot(df)
     if filter == 'edge':
         df = edge_filter(df, sigma=1)
-        plot(df)
+      #  plot(df)
     elif filter == 'canny':
         df = canny_filter(df)
-        plot(df)
+       # plot(df)
     elif filter == 'finder':
         df = finderContour(df, tresh_min = 10)
     else:
         pass
     df = cropping(df, left=2, right=2, up=2, down=2)
-    plot(df)
+
+    if (binary):
+        df = binary(df)
+
+   # plot(df)
     file = retrieve_name(x_data)
 
     if not os.path.exists("data/filtered/"):

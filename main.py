@@ -46,9 +46,11 @@ if PREPROCESSING:
 
 
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
+
                             scaling=True, resolution=RESOLUTION, cut_time=True, length = min_time_steps-10, crop=0, filter='canny')
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
                            scaling=True, resolution=RESOLUTION, cut_time=True, length= min_time_steps-10, crop=0, filter='canny')
+
 
 else:
 
@@ -60,8 +62,8 @@ else:
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
 
-y = evaluate_sequential(x_train,
-                        y_train,
-                        x_test)
+#y = evaluate_sequential(x_train,
+                    #    y_train,
+                       # x_test)
 
-outputter(y)
+#outputter(y)

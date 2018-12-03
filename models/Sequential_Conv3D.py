@@ -42,7 +42,9 @@ def build_sequential(nb_steps, nb_width, nb_height, input_channels, filter, kern
     model.add(Dense(32, activation="relu", name="second_dense", kernel_regularizer=regularizers.l2(0.01)))
     model.add(Dropout(0.5))
     model.add(Dense(1, activation='sigmoid', name="last_dense"))
-    model.compile(optimizer='adam',
+
+    model.compile(optimizer='adadelta',
+
                   loss='binary_crossentropy',
                   metrics=['accuracy'])  # ,final_metric
 
@@ -54,9 +56,11 @@ def evaluate_sequential(X, y, x_test):
 
     #filter = 32 disabled
     patience = 10
-    batch_size = 32
+    batch_size = 1
     epochs = 200
-    kernel_size = (15,20,20)
+
+    kernel_size = (10,5,5)
+
     print("Shape before Model: ", X.shape)
     nb_samples, nb_steps, nb_width, nb_height, input_channels = X.shape
     print('\nfunctional_net ({} samples by {} series)'.format(nb_samples, nb_steps))
