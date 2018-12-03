@@ -5,7 +5,7 @@ import os
 import inspect
 import scipy.ndimage
 import pylab as pyl
-#import cv2
+import cv2
 from matplotlib import pyplot as plt
 from skvideo.io import vwrite
 
@@ -161,32 +161,32 @@ def canny_filter(df):
     return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1, cut_time=True, length=100, crop=25, filter='finder'):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1, cut_time=True, length=100, crop=25, filter='canny'):
     df = list_to_array(x_data, max_time)
-    plot(df)
+    #plot(df)
     if cut_time:
         df = cut_time_steps(df, length)
-        plot(df)
+       # plot(df)
     if normalizing:
         df = normalize(df)
-        plot(df)
+        #plot(df)
     if scaling:
         df = scale(df, resolution)
-        plot(df)
+       # plot(df)
     df = blur_filtering(df,3)
-    plot(df)
+    #plot(df)
     if filter == 'edge':
         df = edge_filter(df, sigma=1)
-        plot(df)
+      #  plot(df)
     elif filter == 'canny':
         df = canny_filter(df)
-        plot(df)
+       # plot(df)
     elif filter == 'finder':
         df = finderContour(df, tresh_min = 10)
     else:
         pass
     df = cropping(df, left=2, right=2, up=2, down=2)
-    plot(df)
+   # plot(df)
     file = retrieve_name(x_data)
 
     if not os.path.exists("data/filtered/"):
