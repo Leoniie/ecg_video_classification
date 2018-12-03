@@ -7,6 +7,8 @@ import scipy.ndimage
 import pylab as pyl
 #import cv2
 from matplotlib import pyplot as plt
+from skvideo.io import vwrite
+
 from helpers.plotter import plot
 
 
@@ -87,6 +89,15 @@ def cut_time_steps(x, length):
     print("Length Cut")
     return x
 
+def blur_filtering(df, kernel_size = 5):
+    df = df.astype(np.uint8)
+    for i in range(df.shape[0]):
+        for j in range(df.shape[1]):
+            blur = cv2.GaussianBlur(df[i, j, :, :, 0], (kernel_size,kernel_size),0)
+            df[i, j, :, :, 0] = blur
+
+    return df
+
 
 def gaussian_filtering(df, sigma):
     # input: array x of size (n_samples, n_timesteps, height, width,1)
@@ -144,13 +155,13 @@ def canny_filter(df):
     df = df.astype(np.uint8)
     for i in range(df.shape[0]):
         for j in range(df.shape[1]):
-            edges = cv2.Canny(df[i, j, :, :, :], df.shape[2], df.shape[3])
+            edges = cv2.Canny(df[i, j, :, :, :], 50, 50)
             df[i, j, :, :, 0] = edges
 
     return df
 
 
-def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0.5, cut_time=True, length=100, crop=25, filter='finder'):
+def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=1, cut_time=True, length=100, crop=25, filter='finder'):
     df = list_to_array(x_data, max_time)
     plot(df)
     if cut_time:
@@ -162,9 +173,7 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
     if scaling:
         df = scale(df, resolution)
         plot(df)
-    df = cropping(df, left=20, right=0, up=0, down=20)
-    plot(df)
-    df = cv2.GaussianBlur(df, (5,5),0)
+    df = blur_filtering(df,3)
     plot(df)
     if filter == 'edge':
         df = edge_filter(df, sigma=1)
@@ -173,15 +182,20 @@ def preprocessing(x_data, max_time, normalizing=True, scaling=True, resolution=0
         df = canny_filter(df)
         plot(df)
     elif filter == 'finder':
-        df = finderContour(df)
+        df = finderContour(df, tresh_min = 10)
     else:
         pass
+    df = cropping(df, left=2, right=2, up=2, down=2)
+    plot(df)
+    file = retrieve_name(x_data)
 
+    if not os.path.exists("data/filtered/"):
+        os.makedirs("data/filtered/")
 
+    for i in range(df.shape[0]):
+        vwrite("data/filtered/filtered_" + str(file) + "_" + str(i) +".avi", df[i,:,:,:,:])
 
     try:
-        file = retrieve_name(x_data)
-        print(file)
         path = 'data/numpy/' + str(file)
         path = os.path.abspath(path)
         np.save(path, df)
