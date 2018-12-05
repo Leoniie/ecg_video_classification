@@ -87,7 +87,7 @@ for i in range(x_test.shape[0]):
         a_test[index, :, :,0] = x_test[i, j, :, :, 0]
 
 
-b_test = Wrapper(a_train,b,a_test)
+b_test, model = Wrapper(a_train,b,a_test)
 q = np.zeros((69))
 
 b_test = np.round(b_test)
