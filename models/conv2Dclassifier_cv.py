@@ -17,22 +17,22 @@ def to2D(optimizer = 'rmsprop'):
 
 
     model = Sequential()
-    model.add(Conv2D(32, (10, 10), input_shape=(96,96, 1)))
+    model.add(Conv2D(32, (10, 10), input_shape=(96,96, 1), name='conv1'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
-    model.add(Conv2D(32, (3, 3), kernel_regularizer=regularizers.l2(0.2)) )
+    model.add(Conv2D(32, (3, 3), kernel_regularizer=regularizers.l2(0.2), name='conv2') )
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
 
-    model.add(Conv2D(64, (10, 10)))
+    model.add(Conv2D(64, (10, 10), name='conv3'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
 
     model.add(Flatten())
-    model.add(Dense(64,  kernel_regularizer=regularizers.l2(0.2)))
+    model.add(Dense(64,  kernel_regularizer=regularizers.l2(0.2), name='dense1'))
     model.add(Activation('relu'))
     model.add(Dropout(0.5))
     model.add(Dense(1))
@@ -54,11 +54,11 @@ def Wrapper(X,y,X_test):
     optimizer = ['rmsprop']
 
     param_grid = dict(optimizer=optimizer)
-    kfold = StratifiedKFold(n_splits=10, shuffle=True)
+    kfold = StratifiedKFold(n_splits=3, shuffle=True)
     grid = GridSearchCV(estimator=wrapped, param_grid=param_grid, cv=kfold)
     grid.fit(X, y)
     y_test = grid.predict(X_test)
 
 
-    return y_test
+    return y_test, grid
 
