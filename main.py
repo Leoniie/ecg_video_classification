@@ -18,8 +18,6 @@ PREPROCESSING = False
 # Preprocessing parameter
 RESOLUTION = 0.5
 
-
-
 if PREPROCESSING:
     # Input folders
 
@@ -43,14 +41,13 @@ if PREPROCESSING:
 
     min_time_steps = np.min((min_time(x_train), min_time(x_test)))
 
-
-
-
     x_train = preprocessing(x_train, max_time_steps, normalizing=False,
 
-                            scaling=False, resolution=RESOLUTION, cut_time=True, length = min_time_steps-10, crop=0, filter='no', binary=True)
+                            scaling=False, resolution=RESOLUTION, cut_time=True, length=min_time_steps - 10, crop=0,
+                            filter='no', binary=True)
     x_test = preprocessing(x_test, max_time_steps, normalizing=False,
-                           scaling=False, resolution=RESOLUTION, cut_time=True, length= min_time_steps-10, crop=0, filter='no',binary=True)
+                           scaling=False, resolution=RESOLUTION, cut_time=True, length=min_time_steps - 10, crop=0,
+                           filter='no', binary=True)
 
 
 else:
@@ -62,32 +59,29 @@ else:
     x_test = np.load('data/numpy/x_test.npy')
     print("Loaded: x_test with shape {}".format(x_test.shape))
 
+# y = evaluate_sequential(x_train,
+#    y_train,
+# x_test)
 
-#y = evaluate_sequential(x_train,
-                    #    y_train,
-                       # x_test)
+# outputter(y)
 
-#outputter(y)
-
-#idee: alle
-a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3],1))
+# idee: alle
+a_train = np.zeros((158 * x_train.shape[1], x_train.shape[2], x_train.shape[3], 1))
 b = np.zeros((158 * x_train.shape[1]))
 for i in range(x_train.shape[0]):
     for j in range(x_train.shape[1]):
         index = x_train.shape[1] * i + j
-        a_train[index, :, :,0] = x_train[i, j, :, :, 0]
+        a_train[index, :, :, 0] = x_train[i, j, :, :, 0]
         b[index] = y_train[i]
 
-
-a_test = np.zeros((x_test.shape[0] * x_test.shape[1], x_test.shape[2], x_test.shape[3],1))
+a_test = np.zeros((x_test.shape[0] * x_test.shape[1], x_test.shape[2], x_test.shape[3], 1))
 
 for i in range(x_test.shape[0]):
     for j in range(x_test.shape[1]):
         index = x_test.shape[1] * i + j
-        a_test[index, :, :,0] = x_test[i, j, :, :, 0]
+        a_test[index, :, :, 0] = x_test[i, j, :, :, 0]
 
-
-b_test, model = Wrapper(a_train,b,a_test)
+b_test, model = Wrapper(a_train, b, a_test)
 q = np.zeros((69))
 
 b_test = np.round(b_test)
@@ -96,9 +90,9 @@ n_images = x_test.shape[1]
 
 for i in range(69):
     for j in range(n_images):
-        q[i] += b_test[i*n_images+j]
+        q[i] += b_test[i * n_images + j]
 
-q = q/n_images
+q = q / n_images
 q = np.round(q)
 
 outputter(q)
